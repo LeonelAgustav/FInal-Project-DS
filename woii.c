@@ -62,7 +62,6 @@ int search_trie(struct TrieNode* root, char* word) {
     return 0;
 }
 
-
 void searchByGenre(struct Trie* trie) {
     system("cls");
     char genre[50];
@@ -156,7 +155,6 @@ void searchByYear() {
     getch();
 }
 
-
 void searchByRating() {
     system("cls");
     int rating;
@@ -196,6 +194,66 @@ void searchByRating() {
     getch();
 }
 
+void insertMovie() {
+    system("cls");
+    struct Movie newMovie;
+
+    printf("Enter movie name: ");
+    getchar(); 
+    fgets(newMovie.name, 100, stdin);
+    newMovie.name[strcspn(newMovie.name, "\n")] = '\0';
+
+    printf("Enter genre: ");
+    fgets(newMovie.genre, 50, stdin);
+    newMovie.genre[strcspn(newMovie.genre, "\n")] = '\0';
+
+    printf("Enter year of release: ");
+    scanf("%d", &newMovie.year);
+
+    do {
+        printf("Enter rating (1 to 5): ");
+        scanf("%d", &newMovie.rating);
+    } while (newMovie.rating < 1 || newMovie.rating > 5);
+
+    printf("Enter trailer URL: ");
+    getchar(); 
+    fgets(newMovie.url, 200, stdin);
+    newMovie.url[strcspn(newMovie.url, "\n")] = '\0';
+
+    FILE* file = fopen("Film.txt", "r");
+    if (!file) {
+        printf("Error opening file.\n");
+        return;
+    }
+
+    fseek(file, 0, SEEK_END);
+    long fileSize = ftell(file);
+    fseek(file, 0, SEEK_SET);
+
+    char* fileContent = (char*)malloc(fileSize + 1);
+    fread(fileContent, 1, fileSize, file);
+    fileContent[fileSize] = '\0';
+    fclose(file);
+
+    file = fopen("Film.txt", "w");
+    if (!file) {
+        printf("Error opening file.\n");
+        free(fileContent);
+        return;
+    }
+
+    fprintf(file, "%s, %s, %d, %d, %s\n", newMovie.name, newMovie.genre, newMovie.year, newMovie.rating, newMovie.url);
+    fprintf(file, "%s", fileContent);
+    fclose(file);
+
+    free(fileContent);
+
+    printf("Movie added successfully.\n");
+
+    printf("\nPress enter to continue...");
+    getch();
+}
+
 int main() {
     struct Trie* trie = (struct Trie*)malloc(sizeof(struct Trie));
     trie->root = createNode();
@@ -208,37 +266,43 @@ int main() {
         printf("----WELCOME TO TLR Movie Searcher----\n");
         printf("--Search your movies by Name, Genre--\n");
         printf("=====================================\n");
-        printf("1. Search by Name\n");
-        printf("2. Search by Genre\n");
-        printf("3. Search by Year Release\n");
-        printf("4. Search by Rating\n");
-        printf("5. Exit\n");
+        printf("1. Insert New Movie\n");
+        printf("2. Search by Name\n");
+        printf("3. Search by Genre\n");
+        printf("4. Search by Year Release\n");
+        printf("5. Search by Rating\n");
+        printf("6. Exit\n");
         printf(">> ");
         scanf("%d", &input);
         printf("\n");
 
         switch (input) {
             case 1:
-                searchByName();
+                insertMovie();
                 printf("\nPress enter to continue...");
                 getch();
                 break;
             case 2:
-                searchByGenre(trie);
+                searchByName();
                 printf("\nPress enter to continue...");
                 getch();
                 break;
             case 3:
-                searchByYear();
+                searchByGenre(trie);
                 printf("\nPress enter to continue...");
                 getch();
                 break;
             case 4:
-                searchByRating();
+                searchByYear();
                 printf("\nPress enter to continue...");
                 getch();
                 break;
             case 5:
+                searchByRating();
+                printf("\nPress enter to continue...");
+                getch();
+                break;
+            case 6:
                 printf("Thank you... Have a nice day :)\n");
                 printf("Press enter to continue...");
                 getch();
@@ -250,8 +314,7 @@ int main() {
                 getch();
                 break;
         }
-    } while (input != 5);
+    } while (input != 6);
 
     return 0;
 }
-
