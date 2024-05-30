@@ -393,7 +393,7 @@ int main()
                     searchByYear();
                     break;
                 case 4:
-                    searchByRating()
+                    searchByRating();
                     break;
                 case 5:
                     main();
