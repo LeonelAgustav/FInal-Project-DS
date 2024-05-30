@@ -423,20 +423,20 @@ int main()
             insertMovie();
             break;
         case 3:
-            system("cls");
-            printf("=====================================\n");
-            printf("--Search your movies by Name, Genre--\n");
-            printf("------Year Release, and Rating-------\n");
-            printf("=====================================\n");
-            printf("1. Search by Name\n");
-            printf("2. Search by Genre\n");
-            printf("3. Search by Year Release\n");
-            printf("4. Search by Rating\n");
-            printf("5. Back to Menu\n");
-            printf(">> ");
-            scanf("%d", &choice);
             do
             {
+                system("cls");
+                printf("=====================================\n");
+                printf("--Search your movies by Name, Genre--\n");
+                printf("=====================================\n");
+                printf("1. Search by Name\n");
+                printf("2. Search by Genre\n");
+                printf("3. Search by Year Release\n");
+                printf("4. Search by Rating\n");
+                printf("5. Back to Menu\n");
+                printf(">> ");
+                scanf("%d", &choice);
+                
                 switch (choice)
                 {
                 case 1:
@@ -466,7 +466,7 @@ int main()
             deleteMovie();
             break;
         case 5:
-            printf("Thank you for using TLR Movie Searher! Have a nice day :)\n");
+            printf("Thank you for using TLR Movie Searher!\nHave a nice day :)\n");
             printf("Press enter to continue...");
             getch();
             system("cls");
