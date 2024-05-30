@@ -49,45 +49,40 @@ void insertTrie(struct Trie* trie, struct Movie* movie, char* genre) {
     currentNode->movie = movie;
 }
 
-void search_trie(struct TrieNode* node, char* prefix, char* buffer, int depth) {
-    if (node == NULL) return;
-    if (node->is_leaf) {
-        buffer[depth] = '\0';
-        printf("Movie found succesfully!\n");
-        printf("Name           : %s\n", node->movie->name);
-        printf("Genre          : %s\n", node->movie->genre);
-        printf("Year Released  : %d\n", node->movie->year);
-        printf("Rating (0-5)   : %d\n", node->movie->rating);
-        printf("URL (Youtube)  : %s\n\n", node->movie->url);
-    }
-    for (int i = 0; i < MAX_CHILDREN; i++) {
-        if (node->children[i] != NULL) {
-            buffer[depth] = 'A' + i;
-            search_trie(node->children[i], prefix, buffer, depth + 1);
-        }
-    }
-}
-
 void searchByGenre(struct Trie* trie) {
     system("cls");
     char genre[50];
     printf("Enter genre prefix (Action, Comedy, Adventure): ");
     scanf("%s", genre);
 
-    struct TrieNode* currentNode = trie->root;
-    for (int i = 0; genre[i] != '\0'; i++) {
-        int index = toupper(genre[i]) - 'A';
-        if (!currentNode->children[index]) {
-            printf("No movie found with genre prefix %s.\n", genre);
-            printf("\nPress enter to continue...");
-            getch();
-            return;
-        }
-        currentNode = currentNode->children[index];
+    FILE* file = fopen("Film.txt", "r");
+    if (!file) {
+        printf("Error opening file.\n");
+        return;
     }
 
-    char buffer[100];
-    search_trie(currentNode, genre, buffer, 0);
+    struct Movie movie;
+    int found = 0;
+
+    printf("|==============================================================|\n");
+    printf("|                          Movie List                          |\n");
+    printf("|==============================================================|\n");
+
+    while (fscanf(file, "%[^,], %[^,], %d, %d, %[^\n]\n", movie.name, movie.genre, &movie.year, &movie.rating, movie.url) == 5) {
+        if (strncasecmp(movie.genre, genre, strlen(genre)) == 0) {
+            printf("|%-8s | %-50s |\n", "Name", movie.name);
+            printf("|%-8s | %-50s |\n", "Genre", movie.genre);
+            printf("|%-8s | %-50d |\n", "Released", movie.year);
+            printf("|%-8s | %-50d |\n", "Rating", movie.rating);
+            printf("|%-8s | %-50s |\n", "URL", movie.url);
+            printf("|==============================================================|\n");
+            found = 1;
+        }
+    }
+
+    if (!found) {
+        printf("No movie found with genre %s.\n", genre);
+    }
 
     printf("\nPress enter to continue...");
     getch();
@@ -107,20 +102,25 @@ void searchByName() {
 
     struct Movie movie;
     int found = 0;
+
+    printf("|==============================================================|\n");
+    printf("|                          Movie List                          |\n");
+    printf("|==============================================================|\n");
+
     while (fscanf(file, "%[^,], %[^,], %d, %d, %[^\n]\n", movie.name, movie.genre, &movie.year, &movie.rating, movie.url) == 5) {
         if (strncasecmp(movie.name, name, strlen(name)) == 0) {
-            printf("Movie found succesfully!\n");
-            printf("Name           : %s\n", node->movie->name);
-            printf("Genre          : %s\n", node->movie->genre);
-            printf("Year Released  : %d\n", node->movie->year);
-            printf("Rating (0-5)   : %d\n", node->movie->rating);
-            printf("URL (Youtube)  : %s\n\n", node->movie->url);
+            printf("|%-8s | %-50s |\n", "Name", movie.name);
+            printf("|%-8s | %-50s |\n", "Genre", movie.genre);
+            printf("|%-8s | %-50d |\n", "Released", movie.year);
+            printf("|%-8s | %-50d |\n", "Rating", movie.rating);
+            printf("|%-8s | %-50s |\n", "URL", movie.url);
+            printf("|==============================================================|\n");
             found = 1;
         }
     }
 
     if (!found) {
-        printf("No movie found with name prefix %s.\n", name);
+        printf("No movie found with name %s.\n", name);
     }
 
     fclose(file);
@@ -143,14 +143,21 @@ void searchByYear() {
 
     struct Movie movie;
     int found = 0;
-    while (fscanf(file, "%[^,], %[^,], %d, %d, %[^\n]\n", movie.name, movie.genre, &movie.year, &movie.rating, movie.url) == 5) {
-        if (movie.year == year) {
-            printf("Movie found succesfully!\n");
-            printf("Name           : %s\n", node->movie->name);
-            printf("Genre          : %s\n", node->movie->genre);
-            printf("Year Released  : %d\n", node->movie->year);
-            printf("Rating (0-5)   : %d\n", node->movie->rating);
-            printf("URL (Youtube)  : %s\n\n", node->movie->url);
+
+    printf("|==============================================================|\n");
+    printf("|                          Movie List                          |\n");
+    printf("|==============================================================|\n");
+
+    while (fscanf(file, "%[^,], %[^,], %d, %d, %[^\n]\n", movie.name, movie.genre, &movie.year, &movie.rating, movie.url) != EOF)
+    {
+        if (movie.year == year)
+        {
+            printf("|%-8s | %-50s |\n", "Name", movie.name);
+            printf("|%-8s | %-50s |\n", "Genre", movie.genre);
+            printf("|%-8s | %-50d |\n", "Released", movie.year);
+            printf("|%-8s | %-50d |\n", "Rating", movie.rating);
+            printf("|%-8s | %-50s |\n", "URL", movie.url);
+            printf("|==============================================================|\n");
             found = 1;
         }
     }
@@ -224,20 +231,23 @@ void ViewMovie() {
     struct Movie movie;
     int movieCount = 0;
 
-    printf("=====================================\n");
-    printf("            List of Movies           \n");
-    printf("=====================================\n");
+    printf("|==============================================================|\n");
+    printf("|                          Movie List                          |\n");
+    printf("|==============================================================|\n");
 
-    while (fscanf(file, "%[^,], %[^,], %d, %d, %[^\n]\n", movie.name, movie.genre, &movie.year, &movie.rating, movie.url) == 5) {
-        printf("Movie %d:\n", ++movieCount);
-        printf("Name           : %s\n", movie.name);
-        printf("Genre          : %s\n", movie.genre);
-        printf("Year Released  : %d\n", movie.year);
-        printf("Rating (0-5)   : %d\n", movie.rating);
-        printf("URL (Youtube)  : %s\n\n", movie.url);
+    while (fscanf(file, "%[^,], %[^,], %d, %d, %[^\n]\n", movie.name, movie.genre, &movie.year, &movie.rating, movie.url) != EOF)
+    {
+        printf("|%-8s | %-50s |\n", "Name", movie.name);
+        printf("|%-8s | %-50s |\n", "Genre", movie.genre);
+        printf("|%-8s | %-50d |\n", "Released", movie.year);
+        printf("|%-8s | %-50d |\n", "Rating", movie.rating);
+        printf("|%-8s | %-50s |\n", "URL", movie.url);
+        printf("|==============================================================|\n");
+        found = 1;
+        
     }
 
-    if (movieCount == 0) {
+    if (!found) {
         printf("No movies found.\n");
     }
 
