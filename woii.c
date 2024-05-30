@@ -273,13 +273,10 @@ void ViewMovie()
         printf("|%-8s | %-50d |\n", "Rating", movie.rating);
         printf("|%-8s | %-50s |\n", "URL", movie.url);
         printf("|==============================================================|\n");
-        found = 1;
+        found++;
     }
 
-    if (!found)
-    {
-        printf("No movies found.\n");
-    }
+    printf("|%-8s = %-50d |\n", "Total Film", found);
 
     fclose(file);
 
@@ -403,7 +400,6 @@ int main()
         system("cls");
         printf("=====================================\n");
         printf("----WELCOME TO TLR Movie Searcher----\n");
-        printf("--Search your movies by Name, Genre--\n");
         printf("=====================================\n");
         printf("1. View Movies\n");
         printf("2. Insert New Movie\n");
@@ -428,6 +424,7 @@ int main()
                 system("cls");
                 printf("=====================================\n");
                 printf("--Search your movies by Name, Genre--\n");
+                printf("--------Year Release, Rating---------\n");
                 printf("=====================================\n");
                 printf("1. Search by Name\n");
                 printf("2. Search by Genre\n");
