@@ -426,6 +426,7 @@ int main()
             system("cls");
             printf("=====================================\n");
             printf("--Search your movies by Name, Genre--\n");
+            printf("------Year Release, and Rating-------\n");
             printf("=====================================\n");
             printf("1. Search by Name\n");
             printf("2. Search by Genre\n");
