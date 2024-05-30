@@ -212,6 +212,42 @@ void searchByRating() {
     getch();
 }
 
+void ViewMovie() {
+    system("cls");
+
+    FILE* file = fopen("Film.txt", "r");
+    if (!file) {
+        printf("Error opening file.\n");
+        return;
+    }
+
+    struct Movie movie;
+    int movieCount = 0;
+
+    printf("=====================================\n");
+    printf("            List of Movies           \n");
+    printf("=====================================\n");
+
+    while (fscanf(file, "%[^,], %[^,], %d, %d, %[^\n]\n", movie.name, movie.genre, &movie.year, &movie.rating, movie.url) == 5) {
+        printf("Movie %d:\n", ++movieCount);
+        printf("Name           : %s\n", movie.name);
+        printf("Genre          : %s\n", movie.genre);
+        printf("Year Released  : %d\n", movie.year);
+        printf("Rating (0-5)   : %d\n", movie.rating);
+        printf("URL (Youtube)  : %s\n\n", movie.url);
+    }
+
+    if (movieCount == 0) {
+        printf("No movies found.\n");
+    }
+
+    fclose(file);
+
+    printf("\nPress enter to continue...");
+    getch();
+}
+
+
 void insertMovie() {
     system("cls");
     struct Movie newMovie;
@@ -312,8 +348,8 @@ int main() {
         printf("----WELCOME TO TLR Movie Searcher----\n");
         printf("--Search your movies by Name, Genre--\n");
         printf("=====================================\n");
-        printf("1. Insert New Movie\n");
-        printf("2. View Movies\n");
+        printf("1. View Movies\n");
+        printf("2. Insert New Movie\n");
         printf("3. Search by Name\n");
         printf("4. Search by Genre\n");
         printf("5. Search by Year Release\n");
