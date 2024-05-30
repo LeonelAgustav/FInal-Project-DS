@@ -136,7 +136,7 @@ void searchByYear() {
     {
         printf("Enter year of release (1900 to 2024): ");
         scanf("%d", &year);
-    } while (year < 1900 || year >);
+    } while (year < 1900 || year > 2024);
 
     FILE* file = fopen("Film.txt", "r");
     if (!file) {
