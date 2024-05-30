@@ -379,27 +379,32 @@ int main()
             printf("5. Back to Menu\n");
             printf(">> ");
             scanf("%d", &choice);
-
-            switch (choice)
+            do
             {
-            case 1:
-                searchByName();
-                break;
-            case 2:
-                searchByGenre(trie);
-                break;
-            case 3:
-                searchByYear();
-                break;
-            case 4:
-                searchByRating()
-                break;
-            case 5:
-                main();
-                break;
-            default:
-                break;
-            }
+                switch (choice)
+                {
+                case 1:
+                    searchByName();
+                    break;
+                case 2:
+                    searchByGenre(trie);
+                    break;
+                case 3:
+                    searchByYear();
+                    break;
+                case 4:
+                    searchByRating()
+                    break;
+                case 5:
+                    main();
+                    break;
+                default:
+                    printf("Invalid input!\n");
+                    printf("Press enter to continue...");
+                    getch();
+                    break;
+                }
+            } while (choice != 5)
             break;
         case 4:
             deleteMovie();
