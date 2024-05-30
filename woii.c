@@ -53,12 +53,12 @@ void search_trie(struct TrieNode* node, char* prefix, char* buffer, int depth) {
     if (node == NULL) return;
     if (node->is_leaf) {
         buffer[depth] = '\0';
-        printf("Movie found:\n");
-        printf("Name: %s\n", node->movie->name);
-        printf("Genre: %s\n", node->movie->genre);
-        printf("Year: %d\n", node->movie->year);
-        printf("Rating: %d\n", node->movie->rating);
-        printf("URL: %s\n\n", node->movie->url);
+        printf("Movie found succesfully!\n");
+        printf("Name           : %s\n", node->movie->name);
+        printf("Genre          : %s\n", node->movie->genre);
+        printf("Year Released  : %d\n", node->movie->year);
+        printf("Rating (0-5)   : %d\n", node->movie->rating);
+        printf("URL (Youtube)  : %s\n\n", node->movie->url);
     }
     for (int i = 0; i < MAX_CHILDREN; i++) {
         if (node->children[i] != NULL) {
@@ -109,12 +109,12 @@ void searchByName() {
     int found = 0;
     while (fscanf(file, "%[^,], %[^,], %d, %d, %[^\n]\n", movie.name, movie.genre, &movie.year, &movie.rating, movie.url) == 5) {
         if (strncasecmp(movie.name, name, strlen(name)) == 0) {
-            printf("Movie found:\n");
-            printf("Name: %s\n", movie.name);
-            printf("Genre: %s\n", movie.genre);
-            printf("Year: %d\n", movie.year);
-            printf("Rating: %d\n", movie.rating);
-            printf("URL: %s\n\n", movie.url);
+            printf("Movie found succesfully!\n");
+            printf("Name           : %s\n", node->movie->name);
+            printf("Genre          : %s\n", node->movie->genre);
+            printf("Year Released  : %d\n", node->movie->year);
+            printf("Rating (0-5)   : %d\n", node->movie->rating);
+            printf("URL (Youtube)  : %s\n\n", node->movie->url);
             found = 1;
         }
     }
@@ -145,12 +145,12 @@ void searchByYear() {
     int found = 0;
     while (fscanf(file, "%[^,], %[^,], %d, %d, %[^\n]\n", movie.name, movie.genre, &movie.year, &movie.rating, movie.url) == 5) {
         if (movie.year == year) {
-            printf("Movie found:\n");
-            printf("Name: %s\n", movie.name);
-            printf("Genre: %s\n", movie.genre);
-            printf("Year: %d\n", movie.year);
-            printf("Rating: %d\n", movie.rating);
-            printf("URL: %s\n\n", movie.url);
+            printf("Movie found succesfully!\n");
+            printf("Name           : %s\n", node->movie->name);
+            printf("Genre          : %s\n", node->movie->genre);
+            printf("Year Released  : %d\n", node->movie->year);
+            printf("Rating (0-5)   : %d\n", node->movie->rating);
+            printf("URL (Youtube)  : %s\n\n", node->movie->url);
             found = 1;
         }
     }
@@ -184,12 +184,12 @@ void searchByRating() {
     int found = 0;
     while (fscanf(file, "%[^,], %[^,], %d, %d, %[^\n]\n", movie.name, movie.genre, &movie.year, &movie.rating, movie.url) == 5) {
         if (movie.rating == rating) {
-            printf("Movie found:\n");
-            printf("Name: %s\n", movie.name);
-            printf("Genre: %s\n", movie.genre);
-            printf("Year: %d\n", movie.year);
-            printf("Rating: %d\n", movie.rating);
-            printf("URL: %s\n\n", movie.url);
+            printf("Movie found succesfully!\n");
+            printf("Name           : %s\n", node->movie->name);
+            printf("Genre          : %s\n", node->movie->genre);
+            printf("Year Released  : %d\n", node->movie->year);
+            printf("Rating (0-5)   : %d\n", node->movie->rating);
+            printf("URL (Youtube)  : %s\n\n", node->movie->url);
             found = 1;
         }
     }
@@ -305,48 +305,52 @@ int main() {
         printf("--Search your movies by Name, Genre--\n");
         printf("=====================================\n");
         printf("1. Insert New Movie\n");
-        printf("2. Search by Name\n");
-        printf("3. Search by Genre\n");
-        printf("4. Search by Year Release\n");
-        printf("5. Search by Rating\n");
-        printf("6. Delete Movie\n");
-        printf("7. Exit\n");
+        printf("2. View Movies\n");
+        printf("3. Search by Name\n");
+        printf("4. Search by Genre\n");
+        printf("5. Search by Year Release\n");
+        printf("6. Search by Rating\n");
+        printf("7. Delete Movie\n");
+        printf("8. Exit\n");
         printf(">> ");
         scanf("%d", &input);
         printf("\n");
 
         switch (input) {
             case 1:
-                insertMovie();
+                ViewMovie();
                 break;
             case 2:
-                searchByName();
+                insertMovie();
                 break;
             case 3:
-                searchByGenre(trie);
+                searchByName();
                 break;
             case 4:
-                searchByYear();
+                searchByGenre(trie);
                 break;
             case 5:
-                searchByRating();
+                searchByYear();
                 break;
             case 6:
-                deleteMovie();
+                searchByRating();
                 break;
             case 7:
-                printf("Thank you... Have a nice day :)\n");
+                deleteMovie();
+                break;
+            case 8:
+                printf("Thank you for using TLR Movie Searher! Have a nice day :)\n");
                 printf("Press enter to continue...");
                 getch();
                 system("cls");
                 break;
             default:
-                printf("Invalid input..!\n");
+                printf("Invalid input!\n");
                 printf("Press enter to continue...");
                 getch();
                 break;
         }
-    } while (input != 7);
+    } while (input != 8);
 
     return 0;
 }
