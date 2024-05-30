@@ -301,7 +301,7 @@ int main() {
     do {
         system("cls");
         printf("=====================================\n");
-        printf("----WELCOME TO TLR Movie Searcher----\n");
+        printf("----WELCOME TO TLR MOVIE SEARCHER----\n");
         printf("--Search your movies by Name, Genre--\n");
         printf("=====================================\n");
         printf("1. Insert New Movie\n");
@@ -335,13 +335,13 @@ int main() {
                 deleteMovie();
                 break;
             case 7:
-                printf("Thank you... Have a nice day :)\n");
+                printf("Thank you for using TLR Movie Searcher.. Have a nice day! :)\n");
                 printf("Press enter to continue...");
                 getch();
                 system("cls");
                 break;
             default:
-                printf("Invalid input..!\n");
+                printf("Invalid input!\n");
                 printf("Press enter to continue...");
                 getch();
                 break;
