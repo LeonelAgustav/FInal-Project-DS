@@ -229,7 +229,7 @@ void ViewMovie() {
     }
 
     struct Movie movie;
-    int movieCount = 0;
+    int found = 0;
 
     printf("|==============================================================|\n");
     printf("|                          Movie List                          |\n");
@@ -244,7 +244,6 @@ void ViewMovie() {
         printf("|%-8s | %-50s |\n", "URL", movie.url);
         printf("|==============================================================|\n");
         found = 1;
-        
     }
 
     if (!found) {
@@ -414,7 +413,7 @@ int main()
                     getch();
                     break;
                 }
-            } while (choice != 5)
+            } while (choice != 5);
             break;
         case 4:
             deleteMovie();
