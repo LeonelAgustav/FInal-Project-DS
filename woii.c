@@ -4,7 +4,7 @@
 #include <ctype.h>
 #include <conio.h>
 
-#define MAX_CHILDREN 256
+#define MAX_CHILDREN 26
 
 struct Movie {
     char name[100];
@@ -15,7 +15,7 @@ struct Movie {
 };
 
 struct TrieNode {
-    struct TrieNode* children[26];
+    struct TrieNode* children[MAX_CHILDREN];
     int is_leaf;
     struct Movie* movie;
 };
@@ -29,7 +29,7 @@ struct TrieNode* createNode() {
     if (newNode) {
         newNode->is_leaf = 0;
         newNode->movie = NULL;
-        for (int i = 0; i < 26; i++) {
+        for (int i = 0; i < MAX_CHILDREN; i++) {
             newNode->children[i] = NULL;
         }
     }
@@ -49,35 +49,45 @@ void insertTrie(struct Trie* trie, struct Movie* movie, char* genre) {
     currentNode->movie = movie;
 }
 
-int search_trie(struct TrieNode* root, char* word) {
-    struct TrieNode* temp = root;
-    for (int i = 0; word[i] != '\0'; i++) {
-        int position = toupper(word[i]) - 'A';
-        if (temp->children[position] == NULL)
-            return 0;
-        temp = temp->children[position];
+void search_trie(struct TrieNode* node, char* prefix, char* buffer, int depth) {
+    if (node == NULL) return;
+    if (node->is_leaf) {
+        buffer[depth] = '\0';
+        printf("Movie found:\n");
+        printf("Name: %s\n", node->movie->name);
+        printf("Genre: %s\n", node->movie->genre);
+        printf("Year: %d\n", node->movie->year);
+        printf("Rating: %d\n", node->movie->rating);
+        printf("URL: %s\n\n", node->movie->url);
     }
-    if (temp != NULL && temp->is_leaf == 1)
-        return 1;
-    return 0;
+    for (int i = 0; i < MAX_CHILDREN; i++) {
+        if (node->children[i] != NULL) {
+            buffer[depth] = 'A' + i;
+            search_trie(node->children[i], prefix, buffer, depth + 1);
+        }
+    }
 }
 
 void searchByGenre(struct Trie* trie) {
     system("cls");
     char genre[50];
-    printf("Enter genre (Action, Comedy, Adventure): ");
+    printf("Enter genre prefix (Action, Comedy, Adventure): ");
     scanf("%s", genre);
 
-    if (!search_trie(trie->root, genre)) {
-        printf("No movie found with genre %s.\n", genre);
-    } else {
-        printf("Movie found:\n");
-        printf("Name: %s\n", trie->root->movie->name);
-        printf("Genre: %s\n", trie->root->movie->genre);
-        printf("Year: %d\n", trie->root->movie->year);
-        printf("Rating: %d\n", trie->root->movie->rating);
-        printf("URL: %s\n", trie->root->movie->url);
+    struct TrieNode* currentNode = trie->root;
+    for (int i = 0; genre[i] != '\0'; i++) {
+        int index = toupper(genre[i]) - 'A';
+        if (!currentNode->children[index]) {
+            printf("No movie found with genre prefix %s.\n", genre);
+            printf("\nPress enter to continue...");
+            getch();
+            return;
+        }
+        currentNode = currentNode->children[index];
     }
+
+    char buffer[100];
+    search_trie(currentNode, genre, buffer, 0);
 
     printf("\nPress enter to continue...");
     getch();
@@ -98,19 +108,19 @@ void searchByName() {
     struct Movie movie;
     int found = 0;
     while (fscanf(file, "%[^,], %[^,], %d, %d, %[^\n]\n", movie.name, movie.genre, &movie.year, &movie.rating, movie.url) == 5) {
-        if (strcmp(movie.name, name) == 0) {
+        if (strncasecmp(movie.name, name, strlen(name)) == 0) {
             printf("Movie found:\n");
             printf("Name: %s\n", movie.name);
             printf("Genre: %s\n", movie.genre);
             printf("Year: %d\n", movie.year);
             printf("Rating: %d\n", movie.rating);
-            printf("URL: %s\n", movie.url);
+            printf("URL: %s\n\n", movie.url);
             found = 1;
         }
     }
 
     if (!found) {
-        printf("No movie found with name %s.\n", name);
+        printf("No movie found with name prefix %s.\n", name);
     }
 
     fclose(file);
@@ -140,7 +150,7 @@ void searchByYear() {
             printf("Genre: %s\n", movie.genre);
             printf("Year: %d\n", movie.year);
             printf("Rating: %d\n", movie.rating);
-            printf("URL: %s\n", movie.url);
+            printf("URL: %s\n\n", movie.url);
             found = 1;
         }
     }
@@ -179,7 +189,7 @@ void searchByRating() {
             printf("Genre: %s\n", movie.genre);
             printf("Year: %d\n", movie.year);
             printf("Rating: %d\n", movie.rating);
-            printf("URL: %s\n", movie.url);
+            printf("URL: %s\n\n", movie.url);
             found = 1;
         }
     }
@@ -220,35 +230,63 @@ void insertMovie() {
     fgets(newMovie.url, 200, stdin);
     newMovie.url[strcspn(newMovie.url, "\n")] = '\0';
 
+    FILE* file = fopen("Film.txt", "a");
+    if (!file) {
+        printf("Error opening file.\n");
+        return;
+    }
+
+    fprintf(file, "%s, %s, %d, %d, %s\n", newMovie.name, newMovie.genre, newMovie.year, newMovie.rating, newMovie.url);
+    fclose(file);
+
+    printf("Movie added successfully.\n");
+
+    printf("\nPress enter to continue...");
+    getch();
+}
+
+void deleteMovie() {
+    system("cls");
+    char name[100];
+    printf("Enter movie name to delete: ");
+    getchar(); 
+    fgets(name, 100, stdin);
+    name[strcspn(name, "\n")] = '\0';
+
     FILE* file = fopen("Film.txt", "r");
     if (!file) {
         printf("Error opening file.\n");
         return;
     }
 
-    fseek(file, 0, SEEK_END);
-    long fileSize = ftell(file);
-    fseek(file, 0, SEEK_SET);
-
-    char* fileContent = (char*)malloc(fileSize + 1);
-    fread(fileContent, 1, fileSize, file);
-    fileContent[fileSize] = '\0';
-    fclose(file);
-
-    file = fopen("Film.txt", "w");
-    if (!file) {
-        printf("Error opening file.\n");
-        free(fileContent);
+    FILE* tempFile = fopen("Temp.txt", "w");
+    if (!tempFile) {
+        printf("Error opening temporary file.\n");
+        fclose(file);
         return;
     }
 
-    fprintf(file, "%s, %s, %d, %d, %s\n", newMovie.name, newMovie.genre, newMovie.year, newMovie.rating, newMovie.url);
-    fprintf(file, "%s", fileContent);
+    struct Movie movie;
+    int found = 0;
+    while (fscanf(file, "%[^,], %[^,], %d, %d, %[^\n]\n", movie.name, movie.genre, &movie.year, &movie.rating, movie.url) == 5) {
+        if (strcmp(movie.name, name) != 0) {
+            fprintf(tempFile, "%s, %s, %d, %d, %s\n", movie.name, movie.genre, movie.year, movie.rating, movie.url);
+        } else {
+            found = 1;
+        }
+    }
+
     fclose(file);
+    fclose(tempFile);
 
-    free(fileContent);
-
-    printf("Movie added successfully.\n");
+    if (found) {
+        remove("Film.txt");
+        rename("Temp.txt", "Film.txt");
+        printf("Movie deleted successfully.\n");
+    } else {
+        remove("Temp.txt");
+        printf("No movie found with name %s.\n", name);
+    }
 
     printf("\nPress enter to continue...");
     getch();
@@ -271,7 +309,8 @@ int main() {
         printf("3. Search by Genre\n");
         printf("4. Search by Year Release\n");
         printf("5. Search by Rating\n");
-        printf("6. Exit\n");
+        printf("6. Delete Movie\n");
+        printf("7. Exit\n");
         printf(">> ");
         scanf("%d", &input);
         printf("\n");
@@ -279,30 +318,23 @@ int main() {
         switch (input) {
             case 1:
                 insertMovie();
-                printf("\nPress enter to continue...");
-                getch();
                 break;
             case 2:
                 searchByName();
-                printf("\nPress enter to continue...");
-                getch();
                 break;
             case 3:
                 searchByGenre(trie);
-                printf("\nPress enter to continue...");
-                getch();
                 break;
             case 4:
                 searchByYear();
-                printf("\nPress enter to continue...");
-                getch();
                 break;
             case 5:
                 searchByRating();
-                printf("\nPress enter to continue...");
-                getch();
                 break;
             case 6:
+                deleteMovie();
+                break;
+            case 7:
                 printf("Thank you... Have a nice day :)\n");
                 printf("Press enter to continue...");
                 getch();
@@ -314,7 +346,7 @@ int main() {
                 getch();
                 break;
         }
-    } while (input != 6);
+    } while (input != 7);
 
     return 0;
 }
