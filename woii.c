@@ -6,7 +6,8 @@
 
 #define MAX_CHILDREN 26
 
-struct Movie {
+struct Movie
+{
     char name[100];
     char genre[50];
     int year;
@@ -14,33 +15,41 @@ struct Movie {
     char url[200];
 };
 
-struct TrieNode {
-    struct TrieNode* children[MAX_CHILDREN];
+struct TrieNode
+{
+    struct TrieNode *children[MAX_CHILDREN];
     int is_leaf;
-    struct Movie* movie;
+    struct Movie *movie;
 };
 
-struct Trie {
-    struct TrieNode* root;
+struct Trie
+{
+    struct TrieNode *root;
 };
 
-struct TrieNode* createNode() {
-    struct TrieNode* newNode = (struct TrieNode*)malloc(sizeof(struct TrieNode));
-    if (newNode) {
+struct TrieNode *createNode()
+{
+    struct TrieNode *newNode = (struct TrieNode *)malloc(sizeof(struct TrieNode));
+    if (newNode)
+    {
         newNode->is_leaf = 0;
         newNode->movie = NULL;
-        for (int i = 0; i < MAX_CHILDREN; i++) {
+        for (int i = 0; i < MAX_CHILDREN; i++)
+        {
             newNode->children[i] = NULL;
         }
     }
     return newNode;
 }
 
-void insertTrie(struct Trie* trie, struct Movie* movie, char* genre) {
-    struct TrieNode* currentNode = trie->root;
-    for (int i = 0; genre[i] != '\0'; i++) {
+void insertTrie(struct Trie *trie, struct Movie *movie, char *genre)
+{
+    struct TrieNode *currentNode = trie->root;
+    for (int i = 0; genre[i] != '\0'; i++)
+    {
         int index = toupper(genre[i]) - 'A';
-        if (!currentNode->children[index]) {
+        if (!currentNode->children[index])
+        {
             currentNode->children[index] = createNode();
         }
         currentNode = currentNode->children[index];
@@ -49,14 +58,16 @@ void insertTrie(struct Trie* trie, struct Movie* movie, char* genre) {
     currentNode->movie = movie;
 }
 
-void searchByGenre(struct Trie* trie) {
+void searchByGenre(struct Trie *trie)
+{
     system("cls");
     char genre[50];
     printf("Enter genre prefix (Action, Comedy, Adventure): ");
     scanf("%s", genre);
 
-    FILE* file = fopen("Film.txt", "r");
-    if (!file) {
+    FILE *file = fopen("Film.txt", "r");
+    if (!file)
+    {
         printf("Error opening file.\n");
         return;
     }
@@ -68,8 +79,10 @@ void searchByGenre(struct Trie* trie) {
     printf("|                          Movie List                          |\n");
     printf("|==============================================================|\n");
 
-    while (fscanf(file, "%[^,], %[^,], %d, %d, %[^\n]\n", movie.name, movie.genre, &movie.year, &movie.rating, movie.url) == 5) {
-        if (strncasecmp(movie.genre, genre, strlen(genre)) == 0) {
+    while (fscanf(file, "%[^,], %[^,], %d, %d, %[^\n]\n", movie.name, movie.genre, &movie.year, &movie.rating, movie.url) == 5)
+    {
+        if (strncasecmp(movie.genre, genre, strlen(genre)) == 0)
+        {
             printf("|%-8s | %-50s |\n", "Name", movie.name);
             printf("|%-8s | %-50s |\n", "Genre", movie.genre);
             printf("|%-8s | %-50d |\n", "Released", movie.year);
@@ -80,7 +93,8 @@ void searchByGenre(struct Trie* trie) {
         }
     }
 
-    if (!found) {
+    if (!found)
+    {
         printf("No movie found with genre %s.\n", genre);
     }
 
@@ -88,14 +102,16 @@ void searchByGenre(struct Trie* trie) {
     getch();
 }
 
-void searchByName() {
+void searchByName()
+{
     system("cls");
     char name[100];
     printf("Enter movie name: ");
     scanf("%s", name);
 
-    FILE* file = fopen("Film.txt", "r");
-    if (!file) {
+    FILE *file = fopen("Film.txt", "r");
+    if (!file)
+    {
         printf("Error opening file.\n");
         return;
     }
@@ -107,8 +123,10 @@ void searchByName() {
     printf("|                          Movie List                          |\n");
     printf("|==============================================================|\n");
 
-    while (fscanf(file, "%[^,], %[^,], %d, %d, %[^\n]\n", movie.name, movie.genre, &movie.year, &movie.rating, movie.url) == 5) {
-        if (strncasecmp(movie.name, name, strlen(name)) == 0) {
+    while (fscanf(file, "%[^,], %[^,], %d, %d, %[^\n]\n", movie.name, movie.genre, &movie.year, &movie.rating, movie.url) == 5)
+    {
+        if (strncasecmp(movie.name, name, strlen(name)) == 0)
+        {
             printf("|%-8s | %-50s |\n", "Name", movie.name);
             printf("|%-8s | %-50s |\n", "Genre", movie.genre);
             printf("|%-8s | %-50d |\n", "Released", movie.year);
@@ -119,7 +137,8 @@ void searchByName() {
         }
     }
 
-    if (!found) {
+    if (!found)
+    {
         printf("No movie found with name %s.\n", name);
     }
 
@@ -129,7 +148,8 @@ void searchByName() {
     getch();
 }
 
-void searchByYear() {
+void searchByYear()
+{
     system("cls");
     int year;
     do
@@ -138,8 +158,9 @@ void searchByYear() {
         scanf("%d", &year);
     } while (year < 1900 || year > 2024);
 
-    FILE* file = fopen("Film.txt", "r");
-    if (!file) {
+    FILE *file = fopen("Film.txt", "r");
+    if (!file)
+    {
         printf("Error opening file.\n");
         return;
     }
@@ -165,7 +186,8 @@ void searchByYear() {
         }
     }
 
-    if (!found) {
+    if (!found)
+    {
         printf("No movie found released in %d.\n", year);
     }
 
@@ -175,24 +197,27 @@ void searchByYear() {
     getch();
 }
 
-void searchByRating() {
+void searchByRating()
+{
     system("cls");
     int rating;
 
-    do {
+    do
+    {
         printf("Enter rating (1 to 5): ");
         scanf("%d", &rating);
     } while (rating < 1 || rating > 5);
 
-    FILE* file = fopen("Film.txt", "r");
-    if (!file) {
+    FILE *file = fopen("Film.txt", "r");
+    if (!file)
+    {
         printf("Error opening file.\n");
         return;
     }
 
     struct Movie movie;
     int found = 0;
-    
+
     printf("|==============================================================|\n");
     printf("|                          Movie List                          |\n");
     printf("|==============================================================|\n");
@@ -213,20 +238,22 @@ void searchByRating() {
 
     if (!found)
     {
-            printf("No movie found with rating %d.\n", rating);
+        printf("No movie found with rating %d.\n", rating);
     }
-    
+
     fclose(file);
 
     printf("\nPress enter to continue...");
     getch();
 }
 
-void ViewMovie() {
+void ViewMovie()
+{
     system("cls");
 
-    FILE* file = fopen("Film.txt", "r");
-    if (!file) {
+    FILE *file = fopen("Film.txt", "r");
+    if (!file)
+    {
         printf("Error opening file.\n");
         return;
     }
@@ -249,7 +276,8 @@ void ViewMovie() {
         found = 1;
     }
 
-    if (!found) {
+    if (!found)
+    {
         printf("No movies found.\n");
     }
 
@@ -259,64 +287,71 @@ void ViewMovie() {
     getch();
 }
 
-
-void insertMovie() {
+void insertMovie()
+{
     system("cls");
     struct Movie newMovie;
 
-    printf("Enter movie name: ");
-    getchar(); 
-    fgets(newMovie.name, 100, stdin);
-    newMovie.name[strcspn(newMovie.name, "\n")] = '\0';
+    do
+    {
+        printf("Enter movie name: ");
+        scanf(" %[^\n]", newMovie.name);
+    } while (strlen(newMovie.name) > 100);
 
     printf("Enter genre: ");
-    fgets(newMovie.genre, 50, stdin);
-    newMovie.genre[strcspn(newMovie.genre, "\n")] = '\0';
+    scanf(" %[^\n]", newMovie.genre);
 
-    printf("Enter year of release: ");
-    scanf("%d", &newMovie.year);
+    do
+    {
+        printf("Enter year of release: ");
+        scanf("%d", &newMovie.year);
+    } while (newMovie.year < 1900 || newMovie.year > 2024);
 
-    do {
+    do
+    {
         printf("Enter rating (1 to 5): ");
         scanf("%d", &newMovie.rating);
     } while (newMovie.rating < 1 || newMovie.rating > 5);
 
     printf("Enter trailer URL: ");
-    getchar(); 
-    fgets(newMovie.url, 200, stdin);
-    newMovie.url[strcspn(newMovie.url, "\n")] = '\0';
+    scanf(" %[^\n]", newMovie.url);
 
-    FILE* file = fopen("Film.txt", "a");
-    if (!file) {
+    FILE *file = fopen("Film.txt", "a");
+    if (!file)
+    {
         printf("Error opening file.\n");
         return;
     }
 
     fprintf(file, "%s, %s, %d, %d, %s\n", newMovie.name, newMovie.genre, newMovie.year, newMovie.rating, newMovie.url);
-    fclose(file);
 
     printf("Movie added successfully.\n");
+
+    fclose(file);
 
     printf("\nPress enter to continue...");
     getch();
 }
 
-void deleteMovie() {
+void deleteMovie()
+{
     system("cls");
     char name[100];
     printf("Enter movie name to delete: ");
-    getchar(); 
+    getchar();
     fgets(name, 100, stdin);
     name[strcspn(name, "\n")] = '\0';
 
-    FILE* file = fopen("Film.txt", "r");
-    if (!file) {
+    FILE *file = fopen("Film.txt", "r");
+    if (!file)
+    {
         printf("Error opening file.\n");
         return;
     }
 
-    FILE* tempFile = fopen("Temp.txt", "w");
-    if (!tempFile) {
+    FILE *tempFile = fopen("Temp.txt", "w");
+    if (!tempFile)
+    {
         printf("Error opening temporary file.\n");
         fclose(file);
         return;
@@ -324,10 +359,14 @@ void deleteMovie() {
 
     struct Movie movie;
     int found = 0;
-    while (fscanf(file, "%[^,], %[^,], %d, %d, %[^\n]\n", movie.name, movie.genre, &movie.year, &movie.rating, movie.url) == 5) {
-        if (strcmp(movie.name, name) != 0) {
+    while (fscanf(file, "%[^,], %[^,], %d, %d, %[^\n]\n", movie.name, movie.genre, &movie.year, &movie.rating, movie.url) == 5)
+    {
+        if (strcmp(movie.name, name) != 0)
+        {
             fprintf(tempFile, "%s, %s, %d, %d, %s\n", movie.name, movie.genre, movie.year, movie.rating, movie.url);
-        } else {
+        }
+        else
+        {
             found = 1;
         }
     }
@@ -335,11 +374,14 @@ void deleteMovie() {
     fclose(file);
     fclose(tempFile);
 
-    if (found) {
+    if (found)
+    {
         remove("Film.txt");
         rename("Temp.txt", "Film.txt");
         printf("Movie deleted successfully.\n");
-    } else {
+    }
+    else
+    {
         remove("Temp.txt");
         printf("No movie found with name %s.\n", name);
     }
@@ -353,7 +395,8 @@ int main()
     struct Trie *trie = (struct Trie *)malloc(sizeof(struct Trie));
     trie->root = createNode();
 
-    int input, choice;;
+    int input, choice;
+    ;
 
     do
     {
@@ -362,7 +405,7 @@ int main()
         printf("----WELCOME TO TLR Movie Searcher----\n");
         printf("--Search your movies by Name, Genre--\n");
         printf("=====================================\n");
-        printf("1. View Movies\n"); 
+        printf("1. View Movies\n");
         printf("2. Insert New Movie\n");
         printf("3. Search Movie\n");
         printf("4. Delete Movie\n");
