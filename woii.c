@@ -336,65 +336,87 @@ void deleteMovie() {
     getch();
 }
 
-int main() {
-    struct Trie* trie = (struct Trie*)malloc(sizeof(struct Trie));
+int main()
+{
+    struct Trie *trie = (struct Trie *)malloc(sizeof(struct Trie));
     trie->root = createNode();
 
-    int input;
+    int input, choice;;
 
-    do {
+    do
+    {
         system("cls");
         printf("=====================================\n");
         printf("----WELCOME TO TLR Movie Searcher----\n");
         printf("--Search your movies by Name, Genre--\n");
         printf("=====================================\n");
-        printf("1. View Movies\n");
-        printf("2. Insert New Movie\n");
-        printf("3. Search by Name\n");
-        printf("4. Search by Genre\n");
-        printf("5. Search by Year Release\n");
-        printf("6. Search by Rating\n");
-        printf("7. Delete Movie\n");
-        printf("8. Exit\n");
+        printf("1. Insert New Movie\n");
+        printf("2. View Movies\n");
+        printf("3. Search Movie\n");
+        printf("4. Delete Movie\n");
+        printf("5. Exit\n");
         printf(">> ");
         scanf("%d", &input);
         printf("\n");
 
-        switch (input) {
+        switch (input)
+        {
+        case 1:
+            ViewMovie();
+            break;
+        case 2:
+            insertMovie();
+            break;
+        case 3:
+            system("cls");
+            printf("=====================================\n");
+            printf("--Search your movies by Name, Genre--\n");
+            printf("=====================================\n");
+            printf("1. Search by Name\n");
+            printf("2. Search by Genre\n");
+            printf("3. Search by Year Release\n");
+            printf("4. Search by Rating\n");
+            printf("5. Back to Menu\n");
+            printf(">> ");
+            scanf("%d", &choice);
+
+            switch (choice)
+            {
             case 1:
-                ViewMovie();
-                break;
-            case 2:
-                insertMovie();
-                break;
-            case 3:
                 searchByName();
                 break;
-            case 4:
+            case 2:
                 searchByGenre(trie);
                 break;
-            case 5:
+            case 3:
                 searchByYear();
                 break;
-            case 6:
-                searchByRating();
+            case 4:
+                searchByRating()
                 break;
-            case 7:
-                deleteMovie();
-                break;
-            case 8:
-                printf("Thank you for using TLR Movie Searher! Have a nice day :)\n");
-                printf("Press enter to continue...");
-                getch();
-                system("cls");
+            case 5:
+                main();
                 break;
             default:
-                printf("Invalid input!\n");
-                printf("Press enter to continue...");
-                getch();
                 break;
+            }
+            break;
+        case 4:
+            deleteMovie();
+            break;
+        case 5:
+            printf("Thank you for using TLR Movie Searher! Have a nice day :)\n");
+            printf("Press enter to continue...");
+            getch();
+            system("cls");
+            break;
+        default:
+            printf("Invalid input!\n");
+            printf("Press enter to continue...");
+            getch();
+            break;
         }
-    } while (input != 8);
+    } while (input != 5);
 
     return 0;
 }
