@@ -136,7 +136,7 @@ void searchByYear() {
     {
         printf("Enter year of release (1900 to 2024): ");
         scanf("%d", &year);
-    } while (year < 1900 || year > 2024)
+    } while (year < 1900 || year >);
 
     FILE* file = fopen("Film.txt", "r");
     if (!file) {
@@ -362,8 +362,8 @@ int main()
         printf("----WELCOME TO TLR Movie Searcher----\n");
         printf("--Search your movies by Name, Genre--\n");
         printf("=====================================\n");
-        printf("1. Insert New Movie\n");
-        printf("2. View Movies\n");
+        printf("1. View Movies\n"); 
+        printf("2. Insert New Movie\n");
         printf("3. Search Movie\n");
         printf("4. Delete Movie\n");
         printf("5. Exit\n");
