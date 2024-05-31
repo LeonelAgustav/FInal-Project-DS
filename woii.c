@@ -95,13 +95,17 @@ void searchByGenre()
             printf("|%-8s | %-50d |\n", "Rating", movie.rating);
             printf("|%-8s | %-50s |\n", "URL", movie.url);
             printf("|==============================================================|\n");
-            found = 1;
+            found++;
         }
     }
 
     if (!found)
     {
-        printf("No movie found with genre %s.\n", genre);
+        printf("No movie found released in %s.\n", genre);
+    } else
+    {
+        printf("|%-8s = %-48d |\n", "Total Film", found);
+        printf("|==============================================================|\n");
     }
 
     char pick;
@@ -149,13 +153,17 @@ void searchByName()
             printf("|%-8s | %-50d |\n", "Rating", movie.rating);
             printf("|%-8s | %-50s |\n", "URL", movie.url);
             printf("|==============================================================|\n");
-            found = 1;
+            found++;
         }
     }
 
     if (!found)
     {
-        printf("No movie found with name %s.\n", name);
+        printf("No movie found released in %s.\n", name);
+    } else
+    {
+        printf("|%-8s = %-48d |\n", "Total Film", found);
+        printf("|==============================================================|\n");
     }
 
     fclose(file);
@@ -208,13 +216,17 @@ void searchByYear()
             printf("|%-8s | %-50d |\n", "Rating", movie.rating);
             printf("|%-8s | %-50s |\n", "URL", movie.url);
             printf("|==============================================================|\n");
-            found = 1;
+            found++;
         }
     }
 
     if (!found)
     {
         printf("No movie found released in %d.\n", year);
+    } else
+    {
+        printf("|%-8s = %-48d |\n", "Total Film", found);
+        printf("|==============================================================|\n");
     }
 
     fclose(file);
@@ -268,7 +280,7 @@ void searchByRating()
             printf("|%-8s | %-50d |\n", "Rating", movie.rating);
             printf("|%-8s | %-50s |\n", "URL", movie.url);
             printf("|==============================================================|\n");
-            found += 1;
+            found++;
         }
     }
 
@@ -279,6 +291,7 @@ void searchByRating()
     else
     {
         printf("|%-8s = %-48d |\n", "Total Film", found);
+        printf("|==============================================================|\n");
     }
 
     fclose(file);
@@ -296,6 +309,7 @@ void searchByRating()
         getch();
     }
 }
+
 
 void ViewMovie()
 {
