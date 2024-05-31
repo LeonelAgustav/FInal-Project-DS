@@ -310,7 +310,6 @@ void searchByRating()
     }
 }
 
-
 void ViewMovie()
 {
     system("cls");
@@ -329,18 +328,19 @@ void ViewMovie()
     printf("|                          Movie List                          |\n");
     printf("|==============================================================|\n");
 
-    while (fscanf(file, "%[^,], %[^,], %d, %d, %[^\n]\n", movie.name, movie.genre, &movie.year, &movie.rating, movie.url) != EOF)
+    while (fscanf(file, "%99[^,], %49[^,], %d, %d, %199[^\n]\n", movie.name, movie.genre, &movie.year, &movie.rating, movie.url) != EOF)
     {
+        found++;
         printf("|%-8s | %-50s |\n", "Name", movie.name);
         printf("|%-8s | %-50s |\n", "Genre", movie.genre);
         printf("|%-8s | %-50d |\n", "Released", movie.year);
         printf("|%-8s | %-50d |\n", "Rating", movie.rating);
         printf("|%-8s | %-50s |\n", "URL", movie.url);
         printf("|==============================================================|\n");
-        found++;
     }
 
-    printf("|%-8s = %-50d |\n", "Total Film", found);
+    printf("|%-8s = %-48d |\n", "Total Film", found);
+    printf("|==============================================================|\n");
 
     fclose(file);
 
