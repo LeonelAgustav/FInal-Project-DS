@@ -58,7 +58,13 @@ void insertTrie(struct Trie *trie, struct Movie *movie, char *genre)
     currentNode->movie = movie;
 }
 
-void searchByGenre(struct Trie *trie)
+void searchByGenre();
+void searchByName();
+void searchByYear();
+void searchByRating();
+void search();
+
+void searchByGenre()
 {
     system("cls");
     char genre[50];
@@ -98,8 +104,18 @@ void searchByGenre(struct Trie *trie)
         printf("No movie found with genre %s.\n", genre);
     }
 
-    printf("\nPress enter to continue...");
-    getch();
+    char pick;
+    printf("Do You Want to Search Again?[Y/N]: ");
+    scanf(" %c", &pick);
+
+    if (pick == 'Y' || pick == 'y')
+    {
+        search();
+    } else if (pick == 'N' || pick == 'n')
+    {
+        printf("\nPress enter to continue...");
+        getch();
+    }
 }
 
 void searchByName()
@@ -144,8 +160,18 @@ void searchByName()
 
     fclose(file);
 
-    printf("\nPress enter to continue...");
-    getch();
+    char pick;
+    printf("Do You Want to Search Again?[Y/N]: ");
+    scanf(" %c", &pick);
+
+    if (pick == 'Y' || pick == 'y')
+    {
+        search();
+    } else if (pick == 'N' || pick == 'n')
+    {
+        printf("\nPress enter to continue...");
+        getch();
+    }
 }
 
 void searchByYear()
@@ -193,8 +219,18 @@ void searchByYear()
 
     fclose(file);
 
-    printf("\nPress enter to continue...");
-    getch();
+    char pick;
+    printf("Do You Want to Search Again?[Y/N]: ");
+    scanf(" %c", &pick);
+
+    if (pick == 'Y' || pick == 'y')
+    {
+        search();
+    } else if (pick == 'N' || pick == 'n')
+    {
+        printf("\nPress enter to continue...");
+        getch();
+    }
 }
 
 void searchByRating()
@@ -232,7 +268,7 @@ void searchByRating()
             printf("|%-8s | %-50d |\n", "Rating", movie.rating);
             printf("|%-8s | %-50s |\n", "URL", movie.url);
             printf("|==============================================================|\n");
-            found = 1;
+            found += 1;
         }
     }
 
@@ -240,11 +276,25 @@ void searchByRating()
     {
         printf("No movie found with rating %d.\n", rating);
     }
+    else
+    {
+        printf("|%-8s = %-48d |\n", "Total Film", found);
+    }
 
     fclose(file);
 
-    printf("\nPress enter to continue...");
-    getch();
+    char pick;
+    printf("Do You Want to Search Again?[Y/N]: ");
+    scanf(" %c", &pick);
+
+    if (pick == 'Y' || pick == 'y')
+    {
+        search();
+    } else if (pick == 'N' || pick == 'n')
+    {
+        printf("\nPress enter to continue...");
+        getch();
+    }
 }
 
 void ViewMovie()
@@ -387,13 +437,52 @@ void deleteMovie()
     getch();
 }
 
+void search()
+{
+    int choice;
+    system("cls");
+    printf("=====================================\n");
+    printf("--Search your movies by Name, Genre--\n");
+    printf("--------Year Release, Rating---------\n");
+    printf("=====================================\n");
+    printf("1. Search by Name\n");
+    printf("2. Search by Genre\n");
+    printf("3. Search by Year Release\n");
+    printf("4. Search by Rating\n");
+    printf("5. Back to Menu\n");
+    printf(">> ");
+    scanf("%d", &choice);
+
+    switch (choice)
+    {
+    case 1:
+        searchByName();
+        break;
+    case 2:
+        searchByGenre();
+        break;
+    case 3:
+        searchByYear();
+        break;
+    case 4:
+        searchByRating();
+        break;
+    case 5:
+        break;
+    default:
+        printf("Invalid input!\n");
+        printf("Press enter to continue...");
+        getch();
+        break;
+    }
+}
+
 int main()
 {
     struct Trie *trie = (struct Trie *)malloc(sizeof(struct Trie));
     trie->root = createNode();
 
-    int input, choice;
-    ;
+    int input;
 
     do
     {
@@ -419,54 +508,16 @@ int main()
             insertMovie();
             break;
         case 3:
-            do
-            {
-                system("cls");
-                printf("=====================================\n");
-                printf("--Search your movies by Name, Genre--\n");
-                printf("--------Year Release, Rating---------\n");
-                printf("=====================================\n");
-                printf("1. Search by Name\n");
-                printf("2. Search by Genre\n");
-                printf("3. Search by Year Release\n");
-                printf("4. Search by Rating\n");
-                printf("5. Back to Menu\n");
-                printf(">> ");
-                scanf("%d", &choice);
-                
-                switch (choice)
-                {
-                case 1:
-                    searchByName();
-                    break;
-                case 2:
-                    searchByGenre(trie);
-                    break;
-                case 3:
-                    searchByYear();
-                    break;
-                case 4:
-                    searchByRating();
-                    break;
-                case 5:
-                    main();
-                    break;
-                default:
-                    printf("Invalid input!\n");
-                    printf("Press enter to continue...");
-                    getch();
-                    break;
-                }
-            } while (choice != 5);
+            search();
             break;
         case 4:
             deleteMovie();
             break;
         case 5:
+            system("cls");
             printf("Thank you for using TLR Movie Searher!\nHave a nice day :)\n");
             printf("Press enter to continue...");
             getch();
-            system("cls");
             break;
         default:
             printf("Invalid input!\n");
