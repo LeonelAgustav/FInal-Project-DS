@@ -102,7 +102,7 @@ void searchByGenre()
 
     if (!found)
     {
-        printf("No movie found released in %s.\n", genre);
+        printf("|               No movie found released in %s.                 |\n", genre);
     } else
     {
         printf("|%-8s = %-48d |\n", "Total Film", found);
@@ -121,6 +121,8 @@ void searchByGenre()
         printf("\nPress enter to continue...");
         getch();
     }
+
+    fclose(file);
 }
 
 void searchByName()
@@ -128,7 +130,7 @@ void searchByName()
     system("cls");
     char name[100];
     printf("Enter movie name: ");
-    scanf("%s", name);
+    scanf("%99s", name);
 
     FILE *file = fopen("Film.txt", "r");
     if (!file)
@@ -160,7 +162,7 @@ void searchByName()
 
     if (!found)
     {
-        printf("No movie found released in %s.\n", name);
+        printf("|                 No movie found with name %s.                 |\n", name);
     } else
     {
         printf("|%-8s = %-48d |\n", "Total Film", found);
@@ -223,7 +225,7 @@ void searchByYear()
 
     if (!found)
     {
-        printf("No movie found released in %d.\n", year);
+        printf("|               No movie found released in %d.                 |\n", year);
     } else
     {
         printf("|%-8s = %-48d |\n", "Total Film", found);
@@ -287,7 +289,7 @@ void searchByRating()
 
     if (!found)
     {
-        printf("No movie found with rating %d.\n", rating);
+        printf("|                 No movie found with rating %d.                |\n", rating);
     }
     else
     {
@@ -533,6 +535,7 @@ int main()
             printf("Thank you for using TLR Movie Searher!\nHave a nice day :)\n");
             printf("Press enter to continue...");
             getch();
+            system("cls");
             break;
         default:
             printf("Invalid input!\n");
