@@ -68,7 +68,9 @@ void searchByGenre()
 {
     system("cls");
     char genre[50];
-    printf("Enter genre prefix (Action, Comedy, Adventure): ");
+    struct Movie movie;
+    
+    printf("Enter genre prefix (Drama, Crime, Action, Adventure, Sci-Fi, Thriller, Mystery, Biography, Musical, Comedy, Romance, Horror, Family, Animation, War, Western, Film-Noir): ");
     scanf("%s", genre);
 
     FILE *file = fopen("Film.txt", "r");
@@ -78,7 +80,6 @@ void searchByGenre()
         return;
     }
 
-    struct Movie movie;
     int found = 0;
 
     printf("|==============================================================|\n");
@@ -109,7 +110,7 @@ void searchByGenre()
     }
 
     char pick;
-    printf("Do You Want to Search Again?[Y/N]: ");
+    printf("\nDo You Want to Search Again?[Y/N]: ");
     scanf(" %c", &pick);
 
     if (pick == 'Y' || pick == 'y')
@@ -169,7 +170,7 @@ void searchByName()
     fclose(file);
 
     char pick;
-    printf("Do You Want to Search Again?[Y/N]: ");
+    printf("\nDo You Want to Search Again?[Y/N]: ");
     scanf(" %c", &pick);
 
     if (pick == 'Y' || pick == 'y')
@@ -232,7 +233,7 @@ void searchByYear()
     fclose(file);
 
     char pick;
-    printf("Do You Want to Search Again?[Y/N]: ");
+    printf("\nDo You Want to Search Again?[Y/N]: ");
     scanf(" %c", &pick);
 
     if (pick == 'Y' || pick == 'y')
@@ -297,7 +298,7 @@ void searchByRating()
     fclose(file);
 
     char pick;
-    printf("Do You Want to Search Again?[Y/N]: ");
+    printf("\nDo You Want to Search Again?[Y/N]: ");
     scanf(" %c", &pick);
 
     if (pick == 'Y' || pick == 'y')
