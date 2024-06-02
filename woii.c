@@ -307,7 +307,7 @@ void searchByGenre()
     printf("\nDo You Want Sorting?[y/n]: ");
     scanf(" %c", &input);
 
-    printf("Enter genre prefix (Drama, Crime, Action, Adventure, Sci-Fi, Thriller, Mystery, Biography, Musical, Comedy, Romance, Horror, Family, Animation, War, Western, Film-Noir): ");
+    printf("Enter Genre prefix\n(Drama, Crime, Action, Adventure, Sci-Fi, Thriller,\nMystery, Biography, Musical, Comedy, Romance, Horror,\nFamily, Animation, War, Western, Film-Noir): \n");
     scanf("%s", genre);
 
     if (input == 'y' || input == 'Y')
