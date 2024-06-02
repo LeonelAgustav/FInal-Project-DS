@@ -78,10 +78,9 @@ void searchByYear();
 void searchByRating();
 void search();
 int main();
-void sort();
+void sortorder(int *sortOrder);
 
-void swapMovies(struct Movie *a, struct Movie *b)
-{
+void swapMovies(struct Movie* a, struct Movie* b) {
     struct Movie temp = *a;
     *a = *b;
     *b = temp;
@@ -107,64 +106,51 @@ void bubbleSortByMovieName(struct Movie movies[], int movieCount, int sortOrder)
     }
 }
 
-void bubbleSortByMovieYear(struct Movie movies[], int movieCount, int sortOrder)
-{
-    int swapped;
-    for (int i = 0; i < movieCount - 1; i++)
-    {
-        swapped = 0;
-        for (int j = 0; j < movieCount - i - 1; j++)
-        {
+void bubbleSortByMovieYear(struct Movie movies[], int movieCount, int sortOrder) {
+    for (int i = 0; i < movieCount - 1; i++) {
+        int swapped = 0;  // Reset swapped for each outer loop iteration
+        for (int j = 0; j < movieCount - 1 - i; j++) {
             if ((sortOrder > 0 && movies[j].year > movies[j + 1].year) ||
-                (sortOrder < 0 && movies[j].year < movies[j + 1].year))
-            {
+                (sortOrder < 0 && movies[j].year < movies[j + 1].year)) {
                 swapMovies(&movies[j], &movies[j + 1]);
                 swapped = 1;
             }
         }
-        if (!swapped)
+        if (!swapped) {
             break;
+        }
     }
 }
 
-void bubbleSortByMovieRating(struct Movie movies[], int movieCount, int sortOrder)
-{
-    int swapped;
-    for (int i = 0; i < movieCount - 1; i++)
-    {
-        swapped = 0;
-        for (int j = 0; j < movieCount - i - 1; j++)
-        {
+void bubbleSortByMovieRating(struct Movie movies[], int movieCount, int sortOrder) {
+    for (int i = 0; i < movieCount - 1; i++) {
+        int swapped = 0;  // Reset swapped for each outer loop iteration
+        for (int j = 0; j < movieCount - 1 - i; j++) {
             if ((sortOrder > 0 && movies[j].rating > movies[j + 1].rating) ||
-                (sortOrder < 0 && movies[j].rating < movies[j + 1].rating))
-            {
+                (sortOrder < 0 && movies[j].rating < movies[j + 1].rating)) {
                 swapMovies(&movies[j], &movies[j + 1]);
                 swapped = 1;
             }
         }
-        if (!swapped)
+        if (!swapped) {
             break;
+        }
     }
 }
 
-void bubbleSortByMovieGenre(struct Movie movies[], int movieCount, int sortOrder)
-{
-
-    int swapped;
-    for (int i = 0; i < movieCount - 1; i++)
-    {
-        swapped = 0;
-        for (int j = 0; j < movieCount - i - 1; j++)
-        {
+void bubbleSortByMovieGenre(struct Movie movies[], int movieCount, int sortOrder) {
+    for (int i = 0; i < movieCount - 1; i++) {
+        int swapped = 0;  // Reset swapped for each outer loop iteration
+        for (int j = 0; j < movieCount - 1 - i; j++) {
             if ((sortOrder > 0 && strcmp(movies[j].genre, movies[j + 1].genre) > 0) ||
-                (sortOrder < 0 && strcmp(movies[j].genre, movies[j + 1].genre) < 0))
-            {
+                (sortOrder < 0 && strcmp(movies[j].genre, movies[j + 1].genre) < 0)) {
                 swapMovies(&movies[j], &movies[j + 1]);
                 swapped = 1;
             }
         }
-        if (!swapped)
+        if (!swapped) {
             break;
+        }
     }
 }
 
@@ -185,11 +171,13 @@ void printMovieList(struct Movie movies[], int movieCount)
     getch();
 }
 
-void sortorder(char order[]) {
+void sortorder(int *sortOrder)
+{
     system("cls");
-    char sortOrder;
+    char sortChoice = 0;
 
-    while (1) {
+    while (1)
+    {
         printf("|=====================|\n");
         printf("|--Choose sort order--|\n");
         printf("|=====================|\n");
@@ -197,32 +185,36 @@ void sortorder(char order[]) {
         printf("| B | %-15s |\n", "Descending");
         printf("|=====================|\n");
         printf(">>> ");
-        scanf(" %c", &sortOrder);
+        scanf(" %c", &sortChoice);
 
-        if (sortOrder == 'A' || sortOrder == 'a') {
-            sortOrder = 1;
+        if (sortChoice == 'A' || sortChoice == 'a')
+        {
+            *sortOrder = 1;
             strcpy(order, "Ascending");
             break;
         }
-        else if (sortOrder == 'B' || sortOrder == 'b') {
-            sortOrder = -1;
+        else if (sortChoice == 'B' || sortChoice == 'b')
+        {
+            *sortOrder = -1;
             strcpy(order, "Descending");
             break;
         }
-        else {
+        else
+        {
             printf("Invalid choice. Please choose 'A' for Ascending or 'B' for Descending.\n");
         }
     }
 }
 
-void sort(struct Movie movies[], int movieCount, char order[])
+void sort(struct Movie movies[], int movieCount)
 {
-    int sortChoice, sortOrder;
+    int sortBy = 0;
+    int sortOrder = 0;
 
     do
     {
         system("cls");
-        
+
         printf("|=============================|\n");
         printf("|---------Choose Sort---------|\n");
         printf("|------Choose Sort Order------|\n");
@@ -234,12 +226,12 @@ void sort(struct Movie movies[], int movieCount, char order[])
         printf("| 5 | %-23s |\n", "Back");
         printf("|=============================|\n");
         printf(">> ");
-        scanf("%d", &sortChoice);
+        scanf("%d", &sortBy);
 
-        switch (sortChoice)
+        switch (sortBy)
         {
         case 1:
-            sortorder(order);
+            sortorder(&sortOrder);
             bubbleSortByMovieName(movies, movieCount, sortOrder);
             system("cls");
             printf("|==============================================================|\n");
@@ -249,7 +241,7 @@ void sort(struct Movie movies[], int movieCount, char order[])
             printMovieList(movies, movieCount);
             break;
         case 2:
-            sortorder(order);
+            sortorder(&sortOrder);
             bubbleSortByMovieGenre(movies, movieCount, sortOrder);
             system("cls");
             printf("|==============================================================|\n");
@@ -259,7 +251,7 @@ void sort(struct Movie movies[], int movieCount, char order[])
             printMovieList(movies, movieCount);
             break;
         case 3:
-            sortorder(order);
+            sortorder(&sortOrder);
             bubbleSortByMovieYear(movies, movieCount, sortOrder);
             system("cls");
             printf("|==============================================================|\n");
@@ -269,7 +261,7 @@ void sort(struct Movie movies[], int movieCount, char order[])
             printMovieList(movies, movieCount);
             break;
         case 4:
-            sortorder(order);
+            sortorder(&sortOrder);
             bubbleSortByMovieRating(movies, movieCount, sortOrder);
             system("cls");
             printf("|==============================================================|\n");
@@ -286,7 +278,7 @@ void sort(struct Movie movies[], int movieCount, char order[])
             getch();
             break;
         }
-    } while (sortChoice != 5);
+    } while (sortBy != 5);
 }
 
 void searchByGenre()
@@ -307,7 +299,7 @@ void searchByGenre()
     printf("\nDo You Want Sorting?[y/n]: ");
     scanf(" %c", &input);
 
-    printf("Enter Genre prefix\n(Drama, Crime, Action, Adventure, Sci-Fi, Thriller,\nMystery, Biography, Musical, Comedy, Romance, Horror,\nFamily, Animation, War, Western, Film-Noir): \n");
+    printf("Enter genre prefix (Drama, Crime, Action, Adventure, Sci-Fi, Thriller, Mystery, Biography, Musical, Comedy, Romance, Horror, Family, Animation, War, Western, Film-Noir): ");
     scanf("%s", genre);
 
     if (input == 'y' || input == 'Y')
@@ -320,7 +312,7 @@ void searchByGenre()
             }
         }
 
-        sort(movies, movieCount, order);
+        sort(movies, movieCount);
     }
     else if (input == 'n' || input == 'N')
     {
@@ -401,7 +393,7 @@ void searchByName()
             }
         }
 
-        sort(movies, movieCount, order);
+        sort(movies, movieCount);
     }
     else if (input == 'n' || input == 'N')
     {
@@ -486,7 +478,7 @@ void searchByYear()
             }
         }
 
-        sort(movies, movieCount, order);
+        sort(movies, movieCount);
     }
     else if (input == 'n' || input == 'N')
     {
@@ -570,7 +562,7 @@ void searchByRating()
             }
         }
 
-        sort(movies, movieCount, order);
+        sort(movies, movieCount);
     }
     else if (input == 'n' || input == 'N')
     {
@@ -650,7 +642,7 @@ void ViewMovie()
 
     if (input == 'y' || input == 'Y')
     {
-        sort(movies, movieCount, order);
+        sort(movies, movieCount);
     }
     else if (input == 'N' || input == 'n')
     {
