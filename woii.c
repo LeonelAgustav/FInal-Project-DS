@@ -233,7 +233,7 @@ void sort(struct Movie movies[], int movieCount, char order[])
         printf("| 4 | %-23s |\n", "Sort By Rating");
         printf("| 5 | %-23s |\n", "Back");
         printf("|=============================|\n");
-        printf(">> ")
+        printf(">> ");
         scanf("%d", &sortChoice);
 
         switch (sortChoice)
