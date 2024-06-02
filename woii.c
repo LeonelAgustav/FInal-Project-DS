@@ -6,6 +6,8 @@
 
 #define MAX_CHILDREN 200
 
+char order[20];
+
 struct Movie
 {
     char name[100];
@@ -97,7 +99,7 @@ void bubbleSortByMovieName(struct Movie movies[], int movieCount, int sortOrder)
                 (sortOrder < 0 && strcmp(movies[j].name, movies[j + 1].name) < 0))
             {
                 swapMovies(&movies[j], &movies[j + 1]);
-                swapped = 1;
+                swapped++;
             }
         }
         if (!swapped)
@@ -179,18 +181,51 @@ void printMovieList(struct Movie movies[], int movieCount)
     }
     printf("|%-8s = %-48d |\n", "Total Film", movieCount);
     printf("|==============================================================|\n");
+    printf("Press enter to continue...");
+    getch();
 }
 
-void sort(struct Movie movies[], int movieCount)
+void sortorder(char order[]) {
+    system("cls");
+    char sortOrder;
+
+    while (1) {
+        printf("|=====================|\n");
+        printf("|--Choose sort order--|\n");
+        printf("|=====================|\n");
+        printf("| A | %-15s |\n", "Ascending");
+        printf("| B | %-15s |\n", "Descending");
+        printf("|=====================|\n");
+        printf(">>> ");
+        scanf(" %c", &sortOrder);
+
+        if (sortOrder == 'A' || sortOrder == 'a') {
+            sortOrder = 1;
+            strcpy(order, "Ascending");
+            break;
+        }
+        else if (sortOrder == 'B' || sortOrder == 'b') {
+            sortOrder = -1;
+            strcpy(order, "Descending");
+            break;
+        }
+        else {
+            printf("Invalid choice. Please choose 'A' for Ascending or 'B' for Descending.\n");
+        }
+    }
+}
+
+void sort(struct Movie movies[], int movieCount, char order[])
 {
     int sortChoice, sortOrder;
-    int input;
 
     do
     {
         system("cls");
+        
         printf("|=============================|\n");
         printf("|---------Choose Sort---------|\n");
+        printf("|------Choose Sort Order------|\n");
         printf("|=============================|\n");
         printf("| 1 | %-23s |\n", "Sort By Name");
         printf("| 2 | %-23s |\n", "Sort By Genre");
@@ -198,192 +233,60 @@ void sort(struct Movie movies[], int movieCount)
         printf("| 4 | %-23s |\n", "Sort By Rating");
         printf("| 5 | %-23s |\n", "Back");
         printf("|=============================|\n");
-        printf(">> ");
-        scanf("%d", &input);
+        printf(">> ")
+        scanf("%d", &sortChoice);
 
-        switch (input)
+        switch (sortChoice)
         {
         case 1:
-            do
-            {
-                system("cls");
-                printf("|=====================|\n");
-                printf("|- Choose Sort Order -|\n");
-                printf("|=====================|\n");
-                printf("| 1 | %-15s |\n", "Ascending");
-                printf("| 2 | %-15s |\n", "Descending");
-                printf("|=====================|\n");
-                printf(">> ");
-                scanf("%d", &sortChoice);
-
-                if (sortChoice == 1)
-                {
-                    system("cls");
-                    sortOrder = 1;
-                    printf("|==============================================================|\n");
-                    printf("|--------------------------Movie List--------------------------|\n");
-                    printf("|-------------------Sorted by Name Ascending-------------------|\n");
-                    printf("|==============================================================|\n");
-                    bubbleSortByMovieName(movies, movieCount, sortOrder);
-                    printMovieList(movies, movieCount);
-                    printf("Press enter to continue...");
-                    getch();
-                    break;
-                }
-                else if (sortChoice == 2)
-                {
-                    system("cls");
-                    sortOrder = -1;
-                    printf("|==============================================================|\n");
-                    printf("|--------------------------Movie List--------------------------|\n");
-                    printf("|------------------Sorted by Name Descending-------------------|\n");
-                    printf("|==============================================================|\n");
-                    bubbleSortByMovieName(movies, movieCount, sortOrder);
-                    printMovieList(movies, movieCount);
-                    printf("Press enter to continue...");
-                    getch();
-                    break;
-                }
-            } while (sortChoice != 1 && sortChoice != 2);
+            sortorder(order);
+            bubbleSortByMovieName(movies, movieCount, sortOrder);
+            system("cls");
+            printf("|==============================================================|\n");
+            printf("|--------------------------Movie List--------------------------|\n");
+            printf("|------------------ Sorted by Name %-10s -----------------|\n", order);
+            printf("|==============================================================|\n");
+            printMovieList(movies, movieCount);
             break;
         case 2:
-            do
-            {
-                system("cls");
-                printf("|=====================|\n");
-                printf("|- Choose Sort Order -|\n");
-                printf("|=====================|\n");
-                printf("| 1 | %-15s |\n", "Ascending");
-                printf("| 2 | %-15s |\n", "Descending");
-                printf("|=====================|\n");
-                printf(">> ");
-                scanf("%d", &sortChoice);
-
-                if (sortChoice == 1)
-                {
-                    system("cls");
-                    sortOrder = 1;
-                    printf("|==============================================================|\n");
-                    printf("|--------------------------Movie List--------------------------|\n");
-                    printf("|------------------Sorted by Genre Ascending-------------------|\n");
-                    printf("|==============================================================|\n");
-                    bubbleSortByMovieGenre(movies, movieCount, sortOrder);
-                    printMovieList(movies, movieCount);
-                    printf("Press enter to continue...");
-                    getch();
-                    break;
-                }
-                else if (sortChoice == 2)
-                {
-                    system("cls");
-                    sortOrder = -1;
-                    printf("|==============================================================|\n");
-                    printf("|--------------------------Movie List--------------------------|\n");
-                    printf("|-----------------Sorted by Genre Descending-------------------|\n");
-                    printf("|==============================================================|\n");
-                    bubbleSortByMovieGenre(movies, movieCount, sortOrder);
-                    printMovieList(movies, movieCount);
-                    printf("Press enter to continue...");
-                    getch();
-                    break;
-                }
-            } while (sortChoice != 1 && sortChoice != 2);
+            sortorder(order);
+            bubbleSortByMovieGenre(movies, movieCount, sortOrder);
+            system("cls");
+            printf("|==============================================================|\n");
+            printf("|--------------------------Movie List--------------------------|\n");
+            printf("|----------------- Sorted by Genre %-10s -----------------|\n", order);
+            printf("|==============================================================|\n");
+            printMovieList(movies, movieCount);
             break;
         case 3:
-            do
-            {
-                system("cls");
-                printf("|=====================|\n");
-                printf("|- Choose Sort Order -|\n");
-                printf("|=====================|\n");
-                printf("| 1 | %-15s |\n", "Ascending");
-                printf("| 2 | %-15s |\n", "Descending");
-                printf("|=====================|\n");
-                printf(">> ");
-                scanf("%d", &sortChoice);
-
-                if (sortChoice == 1)
-                {
-                    system("cls");
-                    sortOrder = 1;
-                    printf("|==============================================================|\n");
-                    printf("|--------------------------Movie List--------------------------|\n");
-                    printf("|--------------Sorted by Year Released Ascending---------------|\n");
-                    printf("|==============================================================|\n");
-                    bubbleSortByMovieYear(movies, movieCount, sortOrder);
-                    printMovieList(movies, movieCount);
-                    printf("Press enter to continue...");
-                    getch();
-                    break;
-                }
-                else if (sortChoice == 2)
-                {
-                    system("cls");
-                    sortOrder = -1;
-                    printf("|==============================================================|\n");
-                    printf("|--------------------------Movie List--------------------------|\n");
-                    printf("|-------------Sorted by Year Released Descending---------------|\n");
-                    printf("|==============================================================|\n");
-                    bubbleSortByMovieYear(movies, movieCount, sortOrder);
-                    printMovieList(movies, movieCount);
-                    printf("Press enter to continue...");
-                    getch();
-                    break;
-                }
-            } while (sortChoice != 1 && sortChoice != 2);
+            sortorder(order);
+            bubbleSortByMovieYear(movies, movieCount, sortOrder);
+            system("cls");
+            printf("|==============================================================|\n");
+            printf("|--------------------------Movie List--------------------------|\n");
+            printf("|------------- Sorted by Year Released %-10s -------------|\n", order);
+            printf("|==============================================================|\n");
+            printMovieList(movies, movieCount);
             break;
         case 4:
-            do
-            {
-                system("cls");
-                printf("|=====================|\n");
-                printf("|- Choose Sort Order -|\n");
-                printf("|=====================|\n");
-                printf("| 1 | %-15s |\n", "Ascending");
-                printf("| 2 | %-15s |\n", "Descending");
-                printf("|=====================|\n");
-                printf(">> ");
-                scanf("%d", &sortChoice);
-
-                if (sortChoice == 1)
-                {
-                    system("cls");
-                    sortOrder = 1;
-                    printf("|==============================================================|\n");
-                    printf("|--------------------------Movie List--------------------------|\n");
-                    printf("|------------------Sorted by Rating Ascending------------------|\n");
-                    printf("|==============================================================|\n");
-                    bubbleSortByMovieRating(movies, movieCount, sortOrder);
-                    printMovieList(movies, movieCount);
-                    printf("Press enter to continue...");
-                    getch();
-                    break;
-                }
-                else if (sortChoice == 2)
-                {
-                    system("cls");
-                    sortOrder = -1;
-                    printf("|==============================================================|\n");
-                    printf("|--------------------------Movie List--------------------------|\n");
-                    printf("|-----------------Sorted by Rating Descending------------------|\n");
-                    printf("|==============================================================|\n");
-                    bubbleSortByMovieRating(movies, movieCount, sortOrder);
-                    printMovieList(movies, movieCount);
-                    printf("Press enter to continue...");
-                    getch();
-                    break;
-                }
-            } while (sortChoice != 1 && sortChoice != 2);
+            sortorder(order);
+            bubbleSortByMovieRating(movies, movieCount, sortOrder);
+            system("cls");
+            printf("|==============================================================|\n");
+            printf("|--------------------------Movie List--------------------------|\n");
+            printf("|----------------- Sorted by Rating %-10s ----------------|\n", order);
+            printf("|==============================================================|\n");
+            printMovieList(movies, movieCount);
             break;
         case 5:
-        
+
             break;
         default:
             printf("Press enter to continue...");
             getch();
             break;
         }
-    } while (input != 5);
+    } while (sortChoice != 5);
 }
 
 void searchByGenre()
@@ -417,7 +320,7 @@ void searchByGenre()
             }
         }
 
-        sort(movies, movieCount);
+        sort(movies, movieCount, order);
     }
     else if (input == 'n' || input == 'N')
     {
@@ -498,7 +401,7 @@ void searchByName()
             }
         }
 
-        sort(movies, movieCount);
+        sort(movies, movieCount, order);
     }
     else if (input == 'n' || input == 'N')
     {
@@ -570,7 +473,8 @@ void searchByYear()
     {
         printf("Enter year of release (1900 to 2024): ");
         scanf("%d", &year);
-    } while (year < 1900 || year > 2024);;
+    } while (year < 1900 || year > 2024);
+    ;
 
     if (input == 'y' || input == 'Y')
     {
@@ -582,7 +486,7 @@ void searchByYear()
             }
         }
 
-        sort(movies, movieCount);
+        sort(movies, movieCount, order);
     }
     else if (input == 'n' || input == 'N')
     {
@@ -666,7 +570,7 @@ void searchByRating()
             }
         }
 
-        sort(movies, movieCount);
+        sort(movies, movieCount, order);
     }
     else if (input == 'n' || input == 'N')
     {
@@ -746,7 +650,7 @@ void ViewMovie()
 
     if (input == 'y' || input == 'Y')
     {
-        sort(movies, movieCount);
+        sort(movies, movieCount, order);
     }
     else if (input == 'N' || input == 'n')
     {
@@ -939,7 +843,7 @@ int main()
         printf("| 5 | %-29s |\n", "Exit");
         printf("|===================================|\n");
         printf(">> ");
-        scanf("%d", &input);
+        scanf(" %d", &input);
         printf("\n");
 
         switch (input)
