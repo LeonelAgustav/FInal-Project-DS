@@ -110,8 +110,8 @@ void bubbleSortByMovieYear(struct Movie movies[], int movieCount, int sortOrder)
     for (int i = 0; i < movieCount - 1; i++) {
         int swapped = 0;  // Reset swapped for each outer loop iteration
         for (int j = 0; j < movieCount - 1 - i; j++) {
-            if ((sortOrder > 0 && movies[j].year > movies[j + 1].year) ||
-                (sortOrder < 0 && movies[j].year < movies[j + 1].year)) {
+            if ((sortOrder > 0 && movies[j].year < movies[j + 1].year) ||
+                (sortOrder < 0 && movies[j].year > movies[j + 1].year)) {
                 swapMovies(&movies[j], &movies[j + 1]);
                 swapped = 1;
             }
@@ -126,8 +126,8 @@ void bubbleSortByMovieRating(struct Movie movies[], int movieCount, int sortOrde
     for (int i = 0; i < movieCount - 1; i++) {
         int swapped = 0;  // Reset swapped for each outer loop iteration
         for (int j = 0; j < movieCount - 1 - i; j++) {
-            if ((sortOrder > 0 && movies[j].rating > movies[j + 1].rating) ||
-                (sortOrder < 0 && movies[j].rating < movies[j + 1].rating)) {
+            if ((sortOrder > 0 && movies[j].rating < movies[j + 1].rating) ||
+                (sortOrder < 0 && movies[j].rating > movies[j + 1].rating)) {
                 swapMovies(&movies[j], &movies[j + 1]);
                 swapped = 1;
             }
