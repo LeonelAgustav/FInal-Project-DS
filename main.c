@@ -4,9 +4,11 @@
 #include <ctype.h>
 #include <conio.h>
 
+#define ID_LENGTH 7
 #define MAX_CHILDREN 200
 
 char order[20];
+char sortname[20];
 
 struct Movie
 {
@@ -15,6 +17,7 @@ struct Movie
     int year;
     int rating;
     char url[200];
+    char id[ID_LENGTH + 1];
 };
 
 struct TrieNode
@@ -72,6 +75,7 @@ void insertTrie(struct Trie *trie, struct Movie *movie, char *genre)
     currentNode->is_leaf = 1;
     currentNode->movie = movie;
 }
+
 void searchByGenre();
 void searchByName();
 void searchByYear();
@@ -170,6 +174,29 @@ void bubbleSortByMovieGenre(struct Movie movies[], int movieCount, int sortOrder
     }
 }
 
+void printSortedMovieList(struct Movie movies[], int movieCount)
+{
+    system("cls");
+    printf("|==============================================================|\n");
+    printf("|--------------------- Sorted Movie List ----------------------|\n");
+    printf("|--------------------- by %-6s %-10s -------------------|\n", sortname, order);
+    printf("|==============================================================|\n");
+    for (int i = 0; i < movieCount; i++)
+    {
+        printf("|%-8s | %-50s |\n", "Name", movies[i].name);
+        printf("|%-8s | %-50s |\n", "Genre", movies[i].genre);
+        printf("|%-8s | %-50d |\n", "Released", movies[i].year);
+        printf("|%-8s | %-50d |\n", "Rating", movies[i].rating);
+        printf("|%-8s | %-50s |\n", "URL", movies[i].url);
+        printf("|%-8s | %-50s |\n", "Id", movies[i].id);
+        printf("|==============================================================|\n");
+    }
+    printf("|%-8s = %-48d |\n", "Total Film", movieCount);
+    printf("|==============================================================|\n");
+    printf("Press enter to continue...");
+    getch();
+}
+
 void printMovieList(struct Movie movies[], int movieCount)
 {
     for (int i = 0; i < movieCount; i++)
@@ -179,12 +206,9 @@ void printMovieList(struct Movie movies[], int movieCount)
         printf("|%-8s | %-50d |\n", "Released", movies[i].year);
         printf("|%-8s | %-50d |\n", "Rating", movies[i].rating);
         printf("|%-8s | %-50s |\n", "URL", movies[i].url);
+        printf("|%-8s | %-50s |\n", "Id", movies[i].id);
         printf("|==============================================================|\n");
     }
-    printf("|%-8s = %-48d |\n", "Total Film", movieCount);
-    printf("|==============================================================|\n");
-    printf("Press enter to continue...");
-    getch();
 }
 
 void sortorder(int *sortOrder)
@@ -222,10 +246,11 @@ void sortorder(int *sortOrder)
     }
 }
 
-void sort(struct Movie movies[], int movieCount)
+void sortviewmovie(struct Movie movies[], int movieCount)
 {
     int sortBy = 0;
     int sortOrder = 0;
+    int continueSorting = 1;
 
     do
     {
@@ -233,7 +258,6 @@ void sort(struct Movie movies[], int movieCount)
 
         printf("|=============================|\n");
         printf("|---------Choose Sort---------|\n");
-        printf("|------Choose Sort Order------|\n");
         printf("|=============================|\n");
         printf("| 1 | %-23s |\n", "Sort By Name");
         printf("| 2 | %-23s |\n", "Sort By Genre");
@@ -242,11 +266,18 @@ void sort(struct Movie movies[], int movieCount)
         printf("| 5 | %-23s |\n", "Back");
         printf("|=============================|\n");
         printf(">> ");
-        scanf("%d", &sortBy);
 
-        switch (sortBy)
+        while (getchar() != '\n');
+
+        if (scanf("%d", &sortBy) != 1)
         {
-        case 1:
+            printf("Invalid input. Please enter a number.\n");
+            getch();
+            sortBy = 0;
+        }
+
+        if (sortBy == 1)
+        {
             sortorder(&sortOrder);
             bubbleSortByMovieName(movies, movieCount, sortOrder);
             system("cls");
@@ -255,8 +286,14 @@ void sort(struct Movie movies[], int movieCount)
             printf("|------------------ Sorted by Name %-10s -----------------|\n", order);
             printf("|==============================================================|\n");
             printMovieList(movies, movieCount);
+            printf("|%-8s = %-48d |\n", "Total Film", movieCount);
+            printf("|==============================================================|\n");
+            printf("\nPress enter to continue...");
+            getch();
             break;
-        case 2:
+        }
+        else if (sortBy == 2)
+        {
             sortorder(&sortOrder);
             bubbleSortByMovieGenre(movies, movieCount, sortOrder);
             system("cls");
@@ -265,8 +302,14 @@ void sort(struct Movie movies[], int movieCount)
             printf("|----------------- Sorted by Genre %-10s -----------------|\n", order);
             printf("|==============================================================|\n");
             printMovieList(movies, movieCount);
+            printf("|%-8s = %-48d |\n", "Total Film", movieCount);
+            printf("|==============================================================|\n");
+            printf("\nPress enter to continue...");
+            getch();
             break;
-        case 3:
+        }
+        else if (sortBy == 3)
+        {
             sortorder(&sortOrder);
             bubbleSortByMovieYear(movies, movieCount, sortOrder);
             system("cls");
@@ -275,8 +318,14 @@ void sort(struct Movie movies[], int movieCount)
             printf("|------------- Sorted by Year Released %-10s -------------|\n", order);
             printf("|==============================================================|\n");
             printMovieList(movies, movieCount);
+            printf("|%-8s = %-48d |\n", "Total Film", movieCount);
+            printf("|==============================================================|\n");
+            printf("\nPress enter to continue...");
+            getch();
             break;
-        case 4:
+        }
+        else if (sortBy == 4)
+        {
             sortorder(&sortOrder);
             bubbleSortByMovieRating(movies, movieCount, sortOrder);
             system("cls");
@@ -285,24 +334,34 @@ void sort(struct Movie movies[], int movieCount)
             printf("|----------------- Sorted by Rating %-10s ----------------|\n", order);
             printf("|==============================================================|\n");
             printMovieList(movies, movieCount);
-            break;
-        case 5:
-
-            break;
-        default:
-            printf("Press enter to continue...");
+            printf("|%-8s = %-48d |\n", "Total Film", movieCount);
+            printf("|==============================================================|\n");
+            printf("\nPress enter to continue...");
             getch();
             break;
         }
-    } while (sortBy != 5);
+        else if (sortBy == 5)
+        {
+            continueSorting = 0; // Set the flag to exit the loop
+        }
+        else
+        {
+            printf("Invalid choice. Please try again.\n");
+        }
+
+    } while (continueSorting);
+
+    return;
 }
 
-void searchByGenre()
+void searchByName()
 {
     system("cls");
-    char genre[50];
+    char name[100];
     struct Movie movies[MAX_CHILDREN];
     int movieCount = 0;
+    int sortOrder = 0;
+    int chooseSort;
 
     FILE *file = fopen("Film.txt", "r");
     if (!file)
@@ -311,49 +370,165 @@ void searchByGenre()
         return;
     }
 
-    char input;
     do
     {
-        printf("\nDo You Want Sorting?[y/n]: ");
-        scanf(" %c", &input);
-    } while (input != 'y' && input != 'Y' && input != 'n' && input != 'N');
+        printf("|=============================|\n");
+        printf("|---------Choose Sort---------|\n");
+        printf("|=============================|\n");
+        printf("| 1 | %-23s |\n", "Sort By Genre");
+        printf("| 2 | %-23s |\n", "Sort By Year Released");
+        printf("| 3 | %-23s |\n", "Sort By Rating");
+        printf("| 4 | %-23s |\n", "Not Sorted");
+        printf("|=============================|\n");
+        printf(">> ");
+        scanf("%d", &chooseSort);
+        system("cls");
+    } while (chooseSort != 1 && chooseSort != 2 && chooseSort != 3 && chooseSort != 4);
+
+    printf("Enter movie name: ");
+    scanf(" %[^\n]s", name);
+
+    while (fscanf(file, "%99[^,], %49[^,], %d, %d, %199[^,], %7[^\n]\n",
+                  movies[movieCount].name, movies[movieCount].genre,
+                  &movies[movieCount].year, &movies[movieCount].rating,
+                  movies[movieCount].url, movies[movieCount].id) != EOF)
+    {
+        if (strncasecmp(movies[movieCount].name, name, strlen(name)) == 0)
+        {
+            movieCount++;
+        }
+    }
+    fclose(file);
+
+    if (chooseSort == 1)
+    {
+        strcpy(sortname, "Genre");
+        sortorder(&sortOrder);
+        bubbleSortByMovieGenre(movies, movieCount, sortOrder);
+        system("cls");
+        printSortedMovieList(movies, movieCount);
+    }
+    else if (chooseSort == 2)
+    {
+        strcpy(sortname, "Year");
+        sortorder(&sortOrder);
+        bubbleSortByMovieYear(movies, movieCount, sortOrder);
+        system("cls");
+        printSortedMovieList(movies, movieCount);
+    }
+    else if (chooseSort == 3)
+    {
+        strcpy(sortname, "Rating");
+        sortorder(&sortOrder);
+        bubbleSortByMovieRating(movies, movieCount, sortOrder);
+        printSortedMovieList(movies, movieCount);
+    }
+    else if (chooseSort == 4)
+    {
+        printSortedMovieList(movies, movieCount);
+
+        if (!movieCount)
+        {
+            printf("|                 No movie found with name %s.                 |\n", name);
+        }
+        else
+        {
+            printf("|%-8s = %-48d |\n", "Total Film", movieCount);
+            printf("|==============================================================|\n");
+        }
+
+        char pick;
+        do
+        {
+            printf("\nDo You Want to Search Again?[Y/N]: ");
+            scanf(" %c", &pick);
+        } while (pick != 'y' && pick != 'Y' && pick != 'n' && pick != 'N');
+
+        if (pick == 'Y' || pick == 'y')
+        {
+            search();
+        }
+        else if (pick == 'N' || pick == 'n')
+        {
+            printf("\nPress enter to continue...");
+            getch();
+        }
+    }
+}
+
+void searchByGenre()
+{
+    system("cls");
+    char genre[50];
+    struct Movie movies[MAX_CHILDREN];
+    int movieCount = 0;
+    int sortOrder = 0;
+    int chooseSort;
+
+    FILE *file = fopen("Film.txt", "r");
+    if (!file)
+    {
+        printf("Error opening file.\n");
+        return;
+    }
+
+    do
+    {
+        printf("|=============================|\n");
+        printf("|---------Choose Sort---------|\n");
+        printf("|=============================|\n");
+        printf("| 1 | %-23s |\n", "Sort By Name");
+        printf("| 2 | %-23s |\n", "Sort By Year Released");
+        printf("| 3 | %-23s |\n", "Sort By Rating");
+        printf("| 4 | %-23s |\n", "Not Sorted");
+        printf("|=============================|\n");
+        printf(">> ");
+        scanf("%d", &chooseSort);
+        system("cls");
+    } while (chooseSort != 1 && chooseSort != 2 && chooseSort != 3 && chooseSort != 4);
 
     printf("Enter genre prefix (Drama, Crime, Action, Adventure, Sci-Fi, Thriller, Mystery, Biography, Musical, Comedy, Romance, Horror, Family, Animation, War, Western, Film-Noir): ");
     scanf("%s", genre);
 
-    if (input == 'y' || input == 'Y')
+    while (fscanf(file, "%99[^,], %49[^,], %d, %d, %199[^,], %7[^\n]\n",
+                  movies[movieCount].name, movies[movieCount].genre,
+                  &movies[movieCount].year, &movies[movieCount].rating,
+                  movies[movieCount].url, movies[movieCount].id) != EOF)
     {
-        while (fscanf(file, "%99[^,], %49[^,], %d, %d, %199[^\n]\n", movies[movieCount].name, movies[movieCount].genre, &movies[movieCount].year, &movies[movieCount].rating, movies[movieCount].url) != EOF)
+        if (strncasecmp(movies[movieCount].genre, genre, strlen(genre)) == 0)
         {
-            if (strncasecmp(movies[movieCount].genre, genre, strlen(genre)) == 0)
-            {
-                movieCount++;
-            }
+            movieCount++;
         }
-
-        sort(movies, movieCount);
     }
-    else if (input == 'n' || input == 'N')
+    fclose(file);
+
+    if (chooseSort == 1)
     {
+        strcpy(sortname, "Name");
+        sortorder(&sortOrder);
+        bubbleSortByMovieName(movies, movieCount, sortOrder);
         system("cls");
+        printSortedMovieList(movies, movieCount);
+    }
+    else if (chooseSort == 2)
+    {
+        strcpy(sortname, "Year");
+        sortorder(&sortOrder);
+        bubbleSortByMovieYear(movies, movieCount, sortOrder);
+        system("cls");
+        printSortedMovieList(movies, movieCount);
+    }
+    else if (chooseSort == 3)
+    {
+        strcpy(sortname, "Rating");
+        sortorder(&sortOrder);
+        bubbleSortByMovieRating(movies, movieCount, sortOrder);
+        printSortedMovieList(movies, movieCount);
+    }
+    else if (chooseSort == 4)
+    {
+        printSortedMovieList(movies, movieCount);
 
-        printf("|==============================================================|\n");
-        printf("|                          Movie List                          |\n");
-        printf("|==============================================================|\n");
-
-        while (fscanf(file, "%99[^,], %49[^,], %d, %d, %199[^\n]\n", movies[movieCount].name, movies[movieCount].genre, &movies[movieCount].year, &movies[movieCount].rating, movies[movieCount].url) != EOF)
-        {
-            if (strncasecmp(movies[movieCount].genre, genre, strlen(genre)) == 0)
-            {
-                movieCount++;
-                printf("|%-8s | %-50s |\n", "Name", movies[movieCount].name);
-                printf("|%-8s | %-50s |\n", "Genre", movies[movieCount].genre);
-                printf("|%-8s | %-50d |\n", "Released", movies[movieCount].year);
-                printf("|%-8s | %-50d |\n", "Rating", movies[movieCount].rating);
-                printf("|%-8s | %-50s |\n", "URL", movies[movieCount].url);
-            }
-            printf("|==============================================================|\n");
-        }
         if (!movieCount)
         {
             printf("|               No movie found with genre %s.                 |\n", genre);
@@ -363,7 +538,7 @@ void searchByGenre()
             printf("|%-8s = %-48d |\n", "Total Film", movieCount);
             printf("|==============================================================|\n");
         }
-        
+
         char pick;
         do
         {
@@ -378,78 +553,9 @@ void searchByGenre()
         else if (pick == 'N' || pick == 'n')
         {
             printf("\nPress enter to continue...");
-            getch();
+            getchar();
         }
     }
-
-    fclose(file);
-}
-
-void searchByName()
-{
-    system("cls");
-    char name[100];
-    struct Movie movies[MAX_CHILDREN];
-    int movieCount = 0;
-
-    FILE *file = fopen("Film.txt", "r");
-    if (!file)
-    {
-        printf("Error opening file.\n");
-        return;
-    }
-
-    printf("Enter movie name: ");
-    scanf(" %[^\n]s", name);
-
-    system("cls");
-
-    printf("|==============================================================|\n");
-    printf("|                          Movie List                          |\n");
-    printf("|==============================================================|\n");
-
-    while (fscanf(file, "%99[^,], %49[^,], %d, %d, %199[^\n]\n", movies[movieCount].name, movies[movieCount].genre, &movies[movieCount].year, &movies[movieCount].rating, movies[movieCount].url) != EOF)
-    {
-        if (strncasecmp(movies[movieCount].name, name, strlen(name)) == 0)
-        {
-            printf("|%-8s | %-50s |\n", "Name", movies[movieCount].name);
-            printf("|%-8s | %-50s |\n", "Genre", movies[movieCount].genre);
-            printf("|%-8s | %-50d |\n", "Released", movies[movieCount].year);
-            printf("|%-8s | %-50d |\n", "Rating", movies[movieCount].rating);
-            printf("|%-8s | %-50s |\n", "URL", movies[movieCount].url);
-            printf("|==============================================================|\n");
-            movieCount++;
-        }
-    }
-
-    if (!movieCount)
-    {
-        printf("|                 No movie found with name %s.                 |\n", name);
-    }
-    else
-    {
-        printf("|%-8s = %-48d |\n", "Total Film", movieCount);
-        printf("|==============================================================|\n");
-    }
-    
-    char pick;
-    do
-    {
-        printf("\nDo You Want to Search Again?[Y/N]: ");
-        scanf(" %c", &pick);
-    } while (pick != 'y' && pick != 'Y' && pick != 'n' && pick != 'N');
-
-    if (pick == 'Y' || pick == 'y')
-    {
-        search();
-    }
-    else if (pick == 'N' || pick == 'n')
-    {
-        printf("\nPress enter to continue...");
-        getch();
-    }
-
-    fclose(file);
 }
 
 void searchByYear()
@@ -458,6 +564,8 @@ void searchByYear()
     int year;
     struct Movie movies[MAX_CHILDREN];
     int movieCount = 0;
+    int sortOrder = 0;
+    int chooseSort;
 
     FILE *file = fopen("Film.txt", "r");
     if (!file)
@@ -466,12 +574,20 @@ void searchByYear()
         return;
     }
 
-    char input;
     do
     {
-        printf("\nDo You Want Sorting?[y/n]: ");
-        scanf(" %c", &input);
-    } while (input != 'y' && input != 'Y' && input != 'n' && input != 'N');
+        printf("|=============================|\n");
+        printf("|---------Choose Sort---------|\n");
+        printf("|=============================|\n");
+        printf("| 1 | %-23s |\n", "Sort By Name");
+        printf("| 2 | %-23s |\n", "Sort By Genre");
+        printf("| 3 | %-23s |\n", "Sort By Rating");
+        printf("| 4 | %-23s |\n", "Not Sorted");
+        printf("|=============================|\n");
+        printf(">> ");
+        scanf("%d", &chooseSort);
+        system("cls");
+    } while (chooseSort != 1 && chooseSort != 2 && chooseSort != 3 && chooseSort != 4);
 
     do
     {
@@ -479,39 +595,42 @@ void searchByYear()
         scanf("%d", &year);
     } while (year < 1900 || year > 2024);
 
-    if (input == 'y' || input == 'Y')
+    while (fscanf(file, "%99[^,], %49[^,], %d, %d, %199[^,], %7[^\n]\n", movies[movieCount].name, movies[movieCount].genre, &movies[movieCount].year, &movies[movieCount].rating, movies[movieCount].url, movies[movieCount].id) != EOF)
     {
-        while (fscanf(file, "%99[^,], %49[^,], %d, %d, %199[^\n]\n", movies[movieCount].name, movies[movieCount].genre, &movies[movieCount].year, &movies[movieCount].rating, movies[movieCount].url) != EOF)
+        if (movies[movieCount].year == year)
         {
-            if (movies[movieCount].year == year)
-            {
-                movieCount++;
-            }
+            movieCount++;
         }
-
-        sort(movies, movieCount);
     }
-    else if (input == 'n' || input == 'N')
+    fclose(file);
+
+    if (chooseSort == 1)
     {
+        strcpy(sortname, "Name");
+        sortorder(&sortOrder);
+        bubbleSortByMovieName(movies, movieCount, sortOrder);
         system("cls");
+        printSortedMovieList(movies, movieCount);
+    }
+    else if (chooseSort == 2)
+    {
+        strcpy(sortname, "Genre");
+        sortorder(&sortOrder);
+        bubbleSortByMovieGenre(movies, movieCount, sortOrder);
+        system("cls");
+        printSortedMovieList(movies, movieCount);
+    }
+    else if (chooseSort == 3)
+    {
+        strcpy(sortname, "Rating");
+        sortorder(&sortOrder);
+        bubbleSortByMovieRating(movies, movieCount, sortOrder);
+        printSortedMovieList(movies, movieCount);
+    }
+    else if (chooseSort == 4)
+    {
+        printSortedMovieList(movies, movieCount);
 
-        printf("|==============================================================|\n");
-        printf("|                          Movie List                          |\n");
-        printf("|==============================================================|\n");
-
-        while (fscanf(file, "%99[^,], %49[^,], %d, %d, %199[^\n]\n", movies[movieCount].name, movies[movieCount].genre, &movies[movieCount].year, &movies[movieCount].rating, movies[movieCount].url) != EOF)
-        {
-            if (movies[movieCount].year == year)
-            {
-                printf("|%-8s | %-50s |\n", "Name", movies[movieCount].name);
-                printf("|%-8s | %-50s |\n", "Genre", movies[movieCount].genre);
-                printf("|%-8s | %-50d |\n", "Released", movies[movieCount].year);
-                printf("|%-8s | %-50d |\n", "Rating", movies[movieCount].rating);
-                printf("|%-8s | %-50s |\n", "URL", movies[movieCount].url);
-                printf("|==============================================================|\n");
-                movieCount++;
-            }
-        }
         if (!movieCount)
         {
             printf("|               No movie found released in %d.                 |\n", year);
@@ -521,7 +640,7 @@ void searchByYear()
             printf("|%-8s = %-48d |\n", "Total Film", movieCount);
             printf("|==============================================================|\n");
         }
-        
+
         char pick;
         do
         {
@@ -539,8 +658,6 @@ void searchByYear()
             getch();
         }
     }
-
-    fclose(file);
 }
 
 void searchByRating()
@@ -549,6 +666,8 @@ void searchByRating()
     int rating;
     struct Movie movies[MAX_CHILDREN];
     int movieCount = 0;
+    int sortOrder = 0;
+    int chooseSort;
 
     FILE *file = fopen("Film.txt", "r");
     if (!file)
@@ -557,12 +676,20 @@ void searchByRating()
         return;
     }
 
-    char input;
     do
     {
-        printf("\nDo You Want Sorting?[y/n]: ");
-        scanf(" %c", &input);
-    } while (input != 'y' && input != 'Y' && input != 'n' && input != 'N');
+        printf("|=============================|\n");
+        printf("|---------Choose Sort---------|\n");
+        printf("|=============================|\n");
+        printf("| 1 | %-23s |\n", "Sort By Name");
+        printf("| 2 | %-23s |\n", "Sort By Genre");
+        printf("| 3 | %-23s |\n", "Sort By Rating");
+        printf("| 4 | %-23s |\n", "Not Sorted");
+        printf("|=============================|\n");
+        printf(">> ");
+        scanf("%d", &chooseSort);
+        system("cls");
+    } while (chooseSort != 1 && chooseSort != 2 && chooseSort != 3 && chooseSort != 4);
 
     do
     {
@@ -570,39 +697,42 @@ void searchByRating()
         scanf("%d", &rating);
     } while (rating < 1 || rating > 5);
 
-    if (input == 'y' || input == 'Y')
+    while (fscanf(file, "%99[^,], %49[^,], %d, %d, %199[^,], %7[^\n]\n", movies[movieCount].name, movies[movieCount].genre, &movies[movieCount].year, &movies[movieCount].rating, movies[movieCount].url, movies[movieCount].id) != EOF)
     {
-        while (fscanf(file, "%99[^,], %49[^,], %d, %d, %199[^\n]\n", movies[movieCount].name, movies[movieCount].genre, &movies[movieCount].year, &movies[movieCount].rating, movies[movieCount].url) != EOF)
+        if (movies[movieCount].rating == rating)
         {
-            if (movies[movieCount].rating == rating)
-            {
-                movieCount++;
-            }
+            movieCount++;
         }
-
-        sort(movies, movieCount);
     }
-    else if (input == 'n' || input == 'N')
+    fclose(file);
+
+    if (chooseSort == 1)
     {
+        strcpy(sortname, "Name");
+        sortorder(&sortOrder);
+        bubbleSortByMovieName(movies, movieCount, sortOrder);
         system("cls");
+        printSortedMovieList(movies, movieCount);
+    }
+    else if (chooseSort == 2)
+    {
+        strcpy(sortname, "Genre");
+        sortorder(&sortOrder);
+        bubbleSortByMovieGenre(movies, movieCount, sortOrder);
+        system("cls");
+        printSortedMovieList(movies, movieCount);
+    }
+    else if (chooseSort == 3)
+    {
+        strcpy(sortname, "Year");
+        sortorder(&sortOrder);
+        bubbleSortByMovieYear(movies, movieCount, sortOrder);
+        printSortedMovieList(movies, movieCount);
+    }
+    else if (chooseSort == 4)
+    {
+        printSortedMovieList(movies, movieCount);
 
-        printf("|==============================================================|\n");
-        printf("|                          Movie List                          |\n");
-        printf("|==============================================================|\n");
-
-        while (fscanf(file, "%99[^,], %49[^,], %d, %d, %199[^\n]\n", movies[movieCount].name, movies[movieCount].genre, &movies[movieCount].year, &movies[movieCount].rating, movies[movieCount].url) != EOF)
-        {
-            if (movies[movieCount].rating == rating)
-            {
-                printf("|%-8s | %-50s |\n", "Name", movies[movieCount].name);
-                printf("|%-8s | %-50s |\n", "Genre", movies[movieCount].genre);
-                printf("|%-8s | %-50d |\n", "Released", movies[movieCount].year);
-                printf("|%-8s | %-50d |\n", "Rating", movies[movieCount].rating);
-                printf("|%-8s | %-50s |\n", "URL", movies[movieCount].url);
-                printf("|==============================================================|\n");
-                movieCount++;
-            }
-        }
         if (!movieCount)
         {
             printf("|                 No movie found with rating %d.                |\n", rating);
@@ -612,7 +742,7 @@ void searchByRating()
             printf("|%-8s = %-48d |\n", "Total Film", movieCount);
             printf("|==============================================================|\n");
         }
-        
+
         char pick;
         do
         {
@@ -647,12 +777,12 @@ void ViewMovie()
         return;
     }
 
-    while (fscanf(file, "%99[^,], %49[^,], %d, %d, %199[^\n]\n",
+    while (fscanf(file, "%99[^,], %49[^,], %d, %d, %199[^,], %7[^\n]\n",
                   movies[movieCount].name,
                   movies[movieCount].genre,
                   &movies[movieCount].year,
                   &movies[movieCount].rating,
-                  movies[movieCount].url) != EOF)
+                  movies[movieCount].url, movies[movieCount].id) != EOF)
     {
         movieCount++;
     }
@@ -667,7 +797,7 @@ void ViewMovie()
 
     if (input == 'y' || input == 'Y')
     {
-        sort(movies, movieCount);
+        sortviewmovie(movies, movieCount);
     }
     else if (input == 'N' || input == 'n')
     {
@@ -675,7 +805,6 @@ void ViewMovie()
         printf("|                          Movie List                          |\n");
         printf("|==============================================================|\n");
 
-        // Print movies from the array
         for (int i = 0; i < movieCount; i++)
         {
             printf("|%-8s | %-50s |\n", "Name", movies[i].name);
@@ -683,17 +812,17 @@ void ViewMovie()
             printf("|%-8s | %-50d |\n", "Released", movies[i].year);
             printf("|%-8s | %-50d |\n", "Rating", movies[i].rating);
             printf("|%-8s | %-50s |\n", "URL", movies[i].url);
+            printf("|%-8s | %-50s |\n", "Id", movies[i].id);
             printf("|==============================================================|\n");
         }
 
         printf("|%-8s = %-48d |\n", "Total Film", movieCount);
         printf("|==============================================================|\n");
+        printf("\nPress enter to continue...");
+        getch();
     }
 
     fclose(file);
-
-    printf("\nPress enter to continue...");
-    getch();
 }
 
 void generateID(const char *name, int number, char *id)
@@ -701,8 +830,10 @@ void generateID(const char *name, int number, char *id)
     char prefix[4] = "___";
     strncpy(prefix, name, 3);
     prefix[3] = '\0';
-    for (int i = 0; i < 3; i++) {
-        if (prefix[i] == ' ' || prefix[i] == ',' || prefix[i] == '\0') {
+    for (int i = 0; i < 3; i++)
+    {
+        if (prefix[i] == ' ' || prefix[i] == ',' || prefix[i] == '\0')
+        {
             prefix[i] = '_';
         }
     }
@@ -712,7 +843,8 @@ void generateID(const char *name, int number, char *id)
 int getLastIDNumber()
 {
     FILE *file = fopen("Film.txt", "r");
-    if (!file) return 0;
+    if (!file)
+        return 0;
 
     struct Movie movie;
     int maxIDNumber = 0;
@@ -726,7 +858,7 @@ int getLastIDNumber()
             maxIDNumber = idNumber;
         }
     }
-    
+
     fclose(file);
     return maxIDNumber;
 }
@@ -804,24 +936,24 @@ void deleteMovie()
         return;
     }
 
-    struct Movie movie;
-    int found = 0;
-    while (fscanf(file, "%[^,], %[^,], %d, %d, %[^\n]\n", movie.name, movie.genre, &movie.year, &movie.rating, movie.url) == 5)
+    struct Movie movie[MAX_CHILDREN];
+    int movieCount = 0;
+    while (fscanf(file, "%99[^,], %49[^,], %d, %d, %199[^,], %7[^\n]\n", movie[movieCount].name, movie[movieCount].genre, &movie[movieCount].year, &movie[movieCount].rating, movie[movieCount].url) == 5)
     {
-        if (strcmp(movie.name, name) != 0)
+        if (strncasecmp(movie[movieCount].name, name, strlen(name)) == 0)
         {
-            fprintf(tempFile, "%s, %s, %d, %d, %s\n", movie.name, movie.genre, movie.year, movie.rating, movie.url);
+            fprintf(tempFile, "%s, %s, %d, %d, %s, %s\n", movie[movieCount].name, movie[movieCount].genre, movie[movieCount].year, movie[movieCount].rating, movie[movieCount].url);
         }
         else
         {
-            found = 1;
+            movieCount = 1;
         }
     }
 
     fclose(file);
     fclose(tempFile);
 
-    if (found)
+    if (movieCount)
     {
         remove("Film.txt");
         rename("Temp.txt", "Film.txt");
@@ -840,6 +972,7 @@ void deleteMovie()
 void search()
 {
     int choice;
+    int sortBy;
     system("cls");
     printf("|===================================|\n");
     printf("|-Search your movies by Name, Genre-|\n");
