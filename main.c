@@ -696,6 +696,41 @@ void ViewMovie()
     getch();
 }
 
+void generateID(const char *name, int number, char *id)
+{
+    char prefix[4] = "___";
+    strncpy(prefix, name, 3);
+    prefix[3] = '\0';
+    for (int i = 0; i < 3; i++) {
+        if (prefix[i] == ' ' || prefix[i] == ',' || prefix[i] == '\0') {
+            prefix[i] = '_';
+        }
+    }
+    sprintf(id, "%.3s%03d", prefix, number); // Format XXX000
+}
+
+int getLastIDNumber()
+{
+    FILE *file = fopen("Film.txt", "r");
+    if (!file) return 0;
+
+    struct Movie movie;
+    int maxIDNumber = 0;
+    char lastID[ID_LENGTH + 1];
+
+    while (fscanf(file, "%[^,], %[^,], %d, %d, %[^\n], %s\n", movie.name, movie.genre, &movie.year, &movie.rating, movie.url, lastID) != EOF)
+    {
+        int idNumber = atoi(&lastID[3]);
+        if (idNumber > maxIDNumber)
+        {
+            maxIDNumber = idNumber;
+        }
+    }
+    
+    fclose(file);
+    return maxIDNumber;
+}
+
 void insertMovie()
 {
     system("cls");
@@ -725,6 +760,9 @@ void insertMovie()
     printf("Enter trailer URL: ");
     scanf(" %[^\n]", newMovie.url);
 
+    int lastIDNumber = getLastIDNumber();
+    generateID(newMovie.name, lastIDNumber + 1, newMovie.id);
+
     FILE *file = fopen("Film.txt", "a");
     if (!file)
     {
@@ -732,7 +770,7 @@ void insertMovie()
         return;
     }
 
-    fprintf(file, "%s, %s, %d, %d, %s\n", newMovie.name, newMovie.genre, newMovie.year, newMovie.rating, newMovie.url);
+    fprintf(file, "%s, %s, %d, %d, %s, %s\n", newMovie.name, newMovie.genre, newMovie.year, newMovie.rating, newMovie.url, newMovie.id);
 
     printf("Movie added successfully.\n");
 
