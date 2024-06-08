@@ -912,58 +912,89 @@ void insertMovie()
     getch();
 }
 
-void deleteMovie()
-{
+void deleteMovie() {
     system("cls");
     char name[100];
     printf("Enter movie name to delete: ");
-    getchar();
-    fgets(name, 100, stdin);
-    name[strcspn(name, "\n")] = '\0';
+    scanf(" %99[^\n]", name);
 
     FILE *file = fopen("Film.txt", "r");
-    if (!file)
-    {
+    if (!file) {
         printf("Error opening file.\n");
         return;
     }
 
-    FILE *tempFile = fopen("Temp.txt", "w");
-    if (!tempFile)
-    {
-        printf("Error opening temporary file.\n");
-        fclose(file);
+    struct Movie movies[MAX_CHILDREN];
+    int movieCount = 0;
+    while (fscanf(file, "%99[^,], %49[^,], %d, %d, %199[^,], %7[^\n]\n", movies[movieCount].name, movies[movieCount].genre, &movies[movieCount].year, &movies[movieCount].rating, movies[movieCount].url, movies[movieCount].id) != EOF) {
+        if (strncasecmp(movies[movieCount].name, name, strlen(name)) == 0) {
+            movieCount++;
+        }
+    }
+    fclose(file);
+
+    if (movieCount == 0) {
+        printf("|==============================================================|\n");
+        printf("|              No Movie Found With Name %-10s             |\n", name);
+        printf("|==============================================================|\n");
+        printf("\nPress enter to continue...");
+        getch();
         return;
     }
 
-    struct Movie movie[MAX_CHILDREN];
-    int movieCount = 0;
-    while (fscanf(file, "%99[^,], %49[^,], %d, %d, %199[^,], %7[^\n]\n", movie[movieCount].name, movie[movieCount].genre, &movie[movieCount].year, &movie[movieCount].rating, movie[movieCount].url) == 5)
-    {
-        if (strncasecmp(movie[movieCount].name, name, strlen(name)) == 0)
-        {
-            fprintf(tempFile, "%s, %s, %d, %d, %s, %s\n", movie[movieCount].name, movie[movieCount].genre, movie[movieCount].year, movie[movieCount].rating, movie[movieCount].url);
+    printf("|==============================================================|\n");
+    printf("|                          Movie List                          |\n");
+    printf("|==============================================================|\n");
+    for (int i = 0; i < movieCount; i++) {
+        printf("|%-8s | %-50s |\n", "Name", movies[i].name);
+        printf("|%-8s | %-50s |\n", "Genre", movies[i].genre);
+        printf("|%-8s | %-50d |\n", "Released", movies[i].year);
+        printf("|%-8s | %-50d |\n", "Rating", movies[i].rating);
+        printf("|%-8s | %-50s |\n", "URL", movies[i].url);
+        printf("|%-8s | %-50s |\n", "Id", movies[i].id);
+        printf("|==============================================================|\n");
+    }
+    printf("|%-8s = %-48d |\n", "Total Film", movieCount);
+    printf("|==============================================================|\n");
+
+    char confirm[4];
+    if (movieCount == 1) {
+        do {
+            printf("Are you sure you want to delete this movie? (yes/no): ");
+            scanf(" %3s", confirm);
+        } while (strcasecmp(confirm, "yes") != 0 && strcasecmp(confirm, "no") != 0);
+        
+        if (strcasecmp(confirm, "yes") != 0) {
+            printf("Deletion canceled.\n");
+            printf("\nPress enter to continue...");
+            getch();
+            return;
         }
-        else
-        {
-            movieCount = 1;
-        }
+        strcpy(name, movies[0].name);
+    } else {
+        printf("\nChoose Movie Name to Delete: ");
+        scanf(" %99[^\n]", name);
     }
 
+    FILE *tempFile = fopen("Temp.txt", "w");
+    if (!tempFile) {
+        printf("Error opening temporary file.\n");
+        return;
+    }
+
+    file = fopen("Film.txt", "r");
+    struct Movie tempMovie;
+    while (fscanf(file, "%99[^,], %49[^,], %d, %d, %199[^,], %7[^\n]\n", tempMovie.name, tempMovie.genre, &tempMovie.year, &tempMovie.rating, tempMovie.url, tempMovie.id) != EOF) {
+        if (strncasecmp(tempMovie.name, name, strlen(name)) != 0) {
+            fprintf(tempFile, "%s, %s, %d, %d, %s, %s\n", tempMovie.name, tempMovie.genre, tempMovie.year, tempMovie.rating, tempMovie.url, tempMovie.id);
+        }
+    }
     fclose(file);
     fclose(tempFile);
 
-    if (movieCount)
-    {
-        remove("Film.txt");
-        rename("Temp.txt", "Film.txt");
-        printf("Movie deleted successfully.\n");
-    }
-    else
-    {
-        remove("Temp.txt");
-        printf("No movie found with name %s.\n", name);
-    }
+    remove("Film.txt");
+    rename("Temp.txt", "Film.txt");
+    printf("Movie deleted successfully.\n");
 
     printf("\nPress enter to continue...");
     getch();
