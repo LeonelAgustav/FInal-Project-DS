@@ -433,7 +433,7 @@ void searchByName()
         }
         else
         {
-            printf("|%-8s = %-48d |\n", "Total Film", movieCount);
+            printf("\n|%-8s = %-48d |\n", "Total Film", movieCount);
             printf("|==============================================================|\n");
         }
 
@@ -535,7 +535,7 @@ void searchByGenre()
         }
         else
         {
-            printf("|%-8s = %-48d |\n", "Total Film", movieCount);
+            printf("\n|%-8s = %-48d |\n", "Total Film", movieCount);
             printf("|==============================================================|\n");
         }
 
@@ -637,7 +637,7 @@ void searchByYear()
         }
         else
         {
-            printf("|%-8s = %-48d |\n", "Total Film", movieCount);
+            printf("\n|%-8s = %-48d |\n", "Total Film", movieCount);
             printf("|==============================================================|\n");
         }
 
@@ -739,7 +739,7 @@ void searchByRating()
         }
         else
         {
-            printf("|%-8s = %-48d |\n", "Total Film", movieCount);
+            printf("\n|%-8s = %-48d |\n", "Total Film", movieCount);
             printf("|==============================================================|\n");
         }
 
