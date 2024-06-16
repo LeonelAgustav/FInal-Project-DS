@@ -10,6 +10,9 @@
 
 char order[20];
 char sortname[20];
+char nameedit[100];
+char idedit[7];
+char edit[20];
 
 struct Movie
 {
@@ -61,11 +64,14 @@ void freeTrie(struct TrieNode *root)
     free(root);
 }
 
-void insertTrie(struct Trie *trie, struct Movie *movie) {
+void insertTrie(struct Trie *trie, struct Movie *movie)
+{
     struct TrieNode *currentNode = trie->root;
-    for (int i = 0; movie->genre[i] != '\0'; i++) {
+    for (int i = 0; movie->genre[i] != '\0'; i++)
+    {
         int index = toupper(movie->genre[i]) - 'A';
-        if (!currentNode->children[index]) {
+        if (!currentNode->children[index])
+        {
             currentNode->children[index] = createNode();
         }
         currentNode = currentNode->children[index];
@@ -265,7 +271,8 @@ void sortviewmovie(struct Movie movies[], int movieCount)
         printf("|=============================|\n");
         printf(">> ");
 
-        while (getchar() != '\n');
+        while (getchar() != '\n')
+            ;
 
         if (scanf("%d", &sortBy) != 1)
         {
@@ -693,7 +700,7 @@ void searchByRating()
         printf("|=============================|\n");
         printf("| 1 | %-23s |\n", "Sort By Name");
         printf("| 2 | %-23s |\n", "Sort By Genre");
-        printf("| 3 | %-23s |\n", "Sort By Rating");
+        printf("| 3 | %-23s |\n", "Sort By Yeas Release");
         printf("| 4 | %-23s |\n", "Not Sorted");
         printf("|=============================|\n");
         printf(">> ");
@@ -856,8 +863,8 @@ void insertMovie(struct Trie *trie)
     system("cls");
     struct Movie *newMovie = (struct Movie *)malloc(sizeof(struct Movie));
 
-
-    do {
+    do
+    {
         printf("Enter movie name: ");
         scanf(" %[^\n]", newMovie->name);
     } while (strlen(newMovie->name) > 100);
@@ -865,12 +872,14 @@ void insertMovie(struct Trie *trie)
     printf("Enter genre: ");
     scanf(" %[^\n]", newMovie->genre);
 
-    do {
+    do
+    {
         printf("Enter year of release: ");
         scanf("%d", &newMovie->year);
     } while (newMovie->year < 1900 || newMovie->year > 2024);
 
-    do {
+    do
+    {
         printf("Enter rating (1 to 5): ");
         scanf("%d", &newMovie->rating);
     } while (newMovie->rating < 1 || newMovie->rating > 5);
@@ -900,28 +909,33 @@ void insertMovie(struct Trie *trie)
     getch();
 }
 
-void deleteMovie() {
+void deleteMovie()
+{
     system("cls");
     char id[100];
     printf("Enter movie ID to delete: ");
     scanf(" %99[^\n]", id);
 
     FILE *file = fopen("Film.txt", "r");
-    if (!file) {
+    if (!file)
+    {
         printf("Error opening file.\n");
         return;
     }
 
     struct Movie movies[MAX_CHILDREN];
     int movieCount = 0;
-    while (fscanf(file, "%99[^,], %49[^,], %d, %d, %199[^,], %7[^\n]\n", movies[movieCount].name, movies[movieCount].genre, &movies[movieCount].year, &movies[movieCount].rating, movies[movieCount].url, movies[movieCount].id) != EOF) {
-        if (strncasecmp(movies[movieCount].id, id, strlen(id)) == 0) {
+    while (fscanf(file, "%99[^,], %49[^,], %d, %d, %199[^,], %7[^\n]\n", movies[movieCount].name, movies[movieCount].genre, &movies[movieCount].year, &movies[movieCount].rating, movies[movieCount].url, movies[movieCount].id) != EOF)
+    {
+        if (strncasecmp(movies[movieCount].id, id, strlen(id)) == 0)
+        {
             movieCount++;
         }
     }
     fclose(file);
 
-    if (movieCount == 0) {
+    if (movieCount == 0)
+    {
         printf("|==============================================================|\n");
         printf("|              No Movie Found With id %-12s             |\n", id);
         printf("|==============================================================|\n");
@@ -933,7 +947,8 @@ void deleteMovie() {
     printf("|==============================================================|\n");
     printf("|                          Movie List                          |\n");
     printf("|==============================================================|\n");
-    for (int i = 0; i < movieCount; i++) {
+    for (int i = 0; i < movieCount; i++)
+    {
         printf("|%-8s | %-50s |\n", "Name", movies[i].name);
         printf("|%-8s | %-50s |\n", "Genre", movies[i].genre);
         printf("|%-8s | %-50d |\n", "Released", movies[i].year);
@@ -946,34 +961,42 @@ void deleteMovie() {
     printf("|==============================================================|\n");
 
     char confirm[4];
-    if (movieCount == 1) {
-        do {
+    if (movieCount == 1)
+    {
+        do
+        {
             printf("Are you sure you want to delete this movie? (yes/no): ");
             scanf(" %3s", confirm);
         } while (strcasecmp(confirm, "yes") != 0 && strcasecmp(confirm, "no") != 0);
-        
-        if (strcasecmp(confirm, "yes") != 0) {
+
+        if (strcasecmp(confirm, "yes") != 0)
+        {
             printf("Deletion canceled.\n");
             printf("\nPress enter to continue...");
             getch();
             return;
         }
         strcpy(id, movies[0].id);
-    } else {
+    }
+    else
+    {
         printf("\nChoose Movie ID to Delete: ");
         scanf(" %99[^\n]", id);
     }
 
     FILE *tempFile = fopen("Temp.txt", "w");
-    if (!tempFile) {
+    if (!tempFile)
+    {
         printf("Error opening temporary file.\n");
         return;
     }
 
     file = fopen("Film.txt", "r");
     struct Movie tempMovie;
-    while (fscanf(file, "%99[^,], %49[^,], %d, %d, %199[^,], %7[^\n]\n", tempMovie.name, tempMovie.genre, &tempMovie.year, &tempMovie.rating, tempMovie.url, tempMovie.id) != EOF) {
-        if (strncasecmp(tempMovie.id, id, strlen(id)) != 0) {
+    while (fscanf(file, "%99[^,], %49[^,], %d, %d, %199[^,], %7[^\n]\n", tempMovie.name, tempMovie.genre, &tempMovie.year, &tempMovie.rating, tempMovie.url, tempMovie.id) != EOF)
+    {
+        if (strncasecmp(tempMovie.id, id, strlen(id)) != 0)
+        {
             fprintf(tempFile, "%s, %s, %d, %d, %s, %s\n", tempMovie.name, tempMovie.genre, tempMovie.year, tempMovie.rating, tempMovie.url, tempMovie.id);
         }
     }
@@ -1030,6 +1053,226 @@ void search()
     }
 }
 
+void editfile()
+{
+    struct Movie movies[MAX_CHILDREN];
+    FILE *file = fopen("Film.txt", "r");
+    if (!file)
+    {
+        printf("Error opening file.\n");
+        return;
+    }
+
+    int movieCount = 0;
+    while (fscanf(file, "%99[^,], %49[^,], %d, %d, %199[^,], %7[^\n]\n",
+                  movies[movieCount].name, movies[movieCount].genre, &movies[movieCount].year,
+                  &movies[movieCount].rating, movies[movieCount].url, movies[movieCount].id) != EOF)
+    {
+        movieCount++;
+    }
+    fclose(file);
+
+    char new[100];
+    printf("Enter %s Movie to edit: ", edit);
+    scanf(" %99[^\n]", new);
+
+    FILE *tempFile = fopen("Temp.txt", "w");
+    if (!tempFile)
+    {
+        printf("Error opening temporary file.\n");
+        return;
+    }
+
+    for (int i = 0; i < movieCount; i++)
+    {
+        if (strcasecmp(movies[i].id, idedit) == 0)
+        {
+            if (strcasecmp(edit, "Name") == 0)
+            {
+                strcpy(movies[i].name, new);
+            }
+            else if (strcasecmp(edit, "Genre") == 0)
+            {
+                strcpy(movies[i].genre, new);
+            }
+            else if (strcasecmp(edit, "Year") == 0)
+            {
+                movies[i].year = atoi(new);
+            }
+            else if (strcasecmp(edit, "Rating") == 0)
+            {
+                movies[i].rating = atoi(new);
+            }
+            else if (strcasecmp(edit, "URL") == 0)
+            {
+                strcpy(movies[i].url, new);
+            }
+        }
+        fprintf(tempFile, "%s, %s, %d, %d, %s, %s\n", movies[i].name, movies[i].genre, movies[i].year, movies[i].rating, movies[i].url, movies[i].id);
+    }
+
+    fclose(tempFile);
+    remove("Film.txt");
+    rename("Temp.txt", "Film.txt");
+    printf("Movie edited successfully.\n");
+
+    printf("\nPress enter to continue...");
+    getch();
+}
+
+void pickedit()
+{
+    int choice;
+
+    do {
+        system("cls"); // Clear screen
+        printf("|================================|\n");
+        printf("|------- Edit Name, Genre, ------|\n");
+        printf("|-- Year Release, Rating, URL  --|\n");
+        printf("|================================|\n");
+        printf("| 1 | %-26s |\n", "Edit Name");
+        printf("| 2 | %-26s |\n", "Edit Genre");
+        printf("| 3 | %-26s |\n", "Edit Year Release");
+        printf("| 4 | %-26s |\n", "Edit Rating");
+        printf("| 5 | %-26s |\n", "Edit URL Trailer");
+        printf("| 6 | %-26s |\n", "Back to Menu");
+        printf("|================================|\n");
+        printf("| %-10s = %-17s |\n", "Movie ID", idedit);
+        printf("| %-10s = %-17s |\n", "Movie Name", nameedit);
+        printf("|================================|\n");
+        printf(">> ");
+        scanf("%d", &choice);
+
+        if (choice < 1 || choice > 6) {
+            printf("Invalid input!\n");
+        }
+    } while (choice < 1 || choice > 6);
+
+    if (choice >= 1 && choice <= 5) {
+        switch (choice) {
+            case 1:
+                strcpy(edit, "Name");
+                break;
+            case 2:
+                strcpy(edit, "Genre");
+                break;
+            case 3:
+                strcpy(edit, "Year");
+                break;
+            case 4:
+                strcpy(edit, "Rating");
+                break;
+            case 5:
+                strcpy(edit, "URL");
+                break;
+            default:
+                break;
+        }
+        editfile();
+        return;
+    } else if (choice == 6) {
+        printf("\nReturning to main menu...\n");
+        printf("\nPress enter to continue...");
+        getch();
+    }
+} 
+
+
+void editMovie()
+{
+    system("cls");
+    struct Movie movies[MAX_CHILDREN];
+    char id[ID_LENGTH + 1];
+    int movieCount = 0;
+    char confirm[4];
+
+    FILE *file = fopen("Film.txt", "r");
+    if (!file)
+    {
+        printf("Error opening file.\n");
+        return;
+    }
+
+    do
+    {
+        printf("Enter movie ID (1-7 characters): ");
+        scanf(" %7s", id);
+    } while (strlen(id) > 7 || strlen(id) < 1);
+
+    while (fscanf(file, "%99[^,], %49[^,], %d, %d, %199[^,], %7[^\n]\n", movies[movieCount].name, movies[movieCount].genre, &movies[movieCount].year, &movies[movieCount].rating, movies[movieCount].url, movies[movieCount].id) != EOF)
+    {
+        if (strncasecmp(movies[movieCount].id, id, strlen(id)) == 0)
+        {
+            strcpy(idedit, movies[movieCount].id);
+            strcpy(nameedit, movies[movieCount].name);
+            movieCount++;
+        }
+    }
+
+    fclose(file);
+
+    if (movieCount > 1)
+    {
+        printf("|==============================================================|\n");
+        printf("|                          Movie List                          |\n");
+        printf("|==============================================================|\n");
+        printMovieList(movies, movieCount);
+        printf("|%-8s = %-48d |\n", "Total Film", movieCount);
+        printf("|==============================================================|\n");
+        printf("Choose the movie ID you want to edit: ");
+        scanf(" %7s", id);
+        int found = 0;
+        for (int i = 0; i < movieCount; i++)
+        {
+            if (strncasecmp(movies[i].id, id, strlen(id)) == 0)
+            {
+                found = 1;
+            }
+        }
+        if (found)
+        {
+            pickedit();
+        }
+        else
+        {
+            printf("Movie not found.\n");
+            printf("\nPress enter to continue...");
+            getch();
+            return;
+        }
+    }
+    else if (movieCount == 1)
+    {
+        printf("|==============================================================|\n");
+        printf("|                          Movie List                          |\n");
+        printf("|==============================================================|\n");
+        printMovieList(movies, movieCount);
+        printf("|%-8s = %-48d |\n", "Total Film", movieCount);
+        printf("|==============================================================|\n");
+        printf("Do you want to edit this movie? (yes/no): ");
+        scanf(" %3s", confirm);
+
+        if (strcasecmp(confirm, "yes") == 0)
+        {
+            pickedit();
+        }
+        else
+        {
+            printf("Edit canceled.\n");
+            printf("\nPress enter to continue...");
+            getch();
+            return;
+        }
+    }
+    else
+    {
+        printf("Movie not found.\n");
+        printf("Press enter to continue...");
+        getch();
+        return;
+    }
+}
+
 int main()
 {
     struct Trie trie;
@@ -1047,7 +1290,8 @@ int main()
         printf("| 2 | %-29s |\n", "Insert New Movie");
         printf("| 3 | %-29s |\n", "Search Movie");
         printf("| 4 | %-29s |\n", "Delete Movie");
-        printf("| 5 | %-29s |\n", "Exit");
+        printf("| 5 | %-29s |\n", "Edit Movie");
+        printf("| 6 | %-29s |\n", "Exit");
         printf("|===================================|\n");
         printf(">> ");
         scanf(" %d", &input);
@@ -1068,6 +1312,9 @@ int main()
             deleteMovie();
             break;
         case 5:
+            editMovie();
+            break;
+        case 6:
             system("cls");
             printf("Thank you for using TLR Movie Searcher!\nHave a nice day :)\n");
             printf("Press enter to exit...");
@@ -1080,7 +1327,7 @@ int main()
             getch();
             break;
         }
-    } while (input != 5);
+    } while (input != 6);
 
     return 0;
 }
